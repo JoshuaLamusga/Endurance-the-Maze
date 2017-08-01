@@ -35,30 +35,108 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Icon, Thumbnail, Readme\Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="MainLoop.cs" />
+    <Compile Include="Maze Campaign\CmpgnSeries.cs" />
+    <Compile Include="Maze Editor\ImgBlock.cs" />
+    <Compile Include="Maze Editor\ImgType.cs" />
+    <Compile Include="Maze Editor\MngrEditor.cs" />
+    <Compile Include="Maze Editor\PropButton.cs" />
+    <Compile Include="Maze Gameplay\Dir.cs" />
+    <Compile Include="Maze Gameplay\GameObj.cs" />
+    <Compile Include="Maze Gameplay\MazeActor.cs" />
+    <Compile Include="Maze Gameplay\MazeBelt.cs" />
+    <Compile Include="Maze Gameplay\MazeCheckpoint.cs" />
+    <Compile Include="Maze Gameplay\MazeClick.cs" />
+    <Compile Include="Maze Gameplay\MazeCoin.cs" />
+    <Compile Include="Maze Gameplay\MazeCoinLock.cs" />
+    <Compile Include="Maze Gameplay\MazeCrate.cs" />
+    <Compile Include="Maze Gameplay\MazeCrateBroken.cs" />
+    <Compile Include="Maze Gameplay\MazeCrateHole.cs" />
+    <Compile Include="Maze Gameplay\MazeEAuto.cs" />
+    <Compile Include="Maze Gameplay\MazeELight.cs" />
+    <Compile Include="Maze Gameplay\MazeEnemy.cs" />
+    <Compile Include="Maze Gameplay\MazeEPusher.cs" />
+    <Compile Include="Maze Gameplay\MazeFilter.cs" />
+    <Compile Include="Maze Gameplay\MazeFinish.cs" />
+    <Compile Include="Maze Gameplay\MazeFloor.cs" />
+    <Compile Include="Maze Gameplay\MazeFreeze.cs" />
+    <Compile Include="Maze Gameplay\MazeGate.cs" />
+    <Compile Include="Maze Gameplay\MazeGoal.cs" />
+    <Compile Include="Maze Gameplay\MazeHealth.cs" />
+    <Compile Include="Maze Gameplay\MazeIce.cs" />
+    <Compile Include="Maze Gameplay\MazeKey.cs" />
+    <Compile Include="Maze Gameplay\MazeLock.cs" />
+    <Compile Include="Maze Gameplay\MazeMessage.cs" />
+    <Compile Include="Maze Gameplay\MazeMirror.cs" />
+    <Compile Include="Maze Gameplay\MazeMultiWay.cs" />
+    <Compile Include="Maze Gameplay\MazePanel.cs" />
+    <Compile Include="Maze Gameplay\MazeRotate.cs" />
+    <Compile Include="Maze Gameplay\MazeSpawner.cs" />
+    <Compile Include="Maze Gameplay\MazeSpike.cs" />
+    <Compile Include="Maze Gameplay\MazeStairs.cs" />
+    <Compile Include="Maze Gameplay\MazeTeleporter.cs" />
+    <Compile Include="Maze Gameplay\MazeThaw.cs" />
+    <Compile Include="Maze Gameplay\MazeTurret.cs" />
+    <Compile Include="Maze Gameplay\MazeTurretBullet.cs" />
+    <Compile Include="Maze Gameplay\MazeWall.cs" />
+    <Compile Include="Maze Gameplay\MngrLvl.cs" />
+    <Compile Include="Maze Gameplay\Type.cs" />
+    <Compile Include="Maze Menu\MngrTitle.cs" />
+    <Compile Include="Maze Menu\TitleItemCmpgn.cs" />
+    <Compile Include="Maze Menu\TitleItemEdit.cs" />
+    <Compile Include="Maze Menu\TitleItemMain.cs" />
+    <Compile Include="SimpleXnaFramework\ISprite.cs" />
+    <Compile Include="SimpleXnaFramework\KeyboardStateExt.cs" />
+    <Compile Include="SimpleXnaFramework\SfxPlaylist.cs" />
+    <Compile Include="MainInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleXnaFramework\SmoothRect.cs" />
+    <Compile Include="SimpleXnaFramework\Sound.cs" />
+    <Compile Include="SimpleXnaFramework\Sprite.cs" />
+    <Compile Include="SimpleXnaFramework\SpriteAtlas.cs" />
+    <Compile Include="SimpleXnaFramework\SpriteDraw.cs" />
+    <Compile Include="SimpleXnaFramework\SpriteText.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon.ico" />
+    <Content Include="Icon, Thumbnail, Readme\GameThumbnail.png" />
+    <Content Include="Icon, Thumbnail, Readme\Readme.txt" />
+    <Content Include="Icon, Thumbnail, Readme\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <EmbeddedResource Include="Levels\LvlDoom1.lvl" />
+    <EmbeddedResource Include="Levels\LvlEasy1.lvl" />
+    <EmbeddedResource Include="Levels\LvlEasy2.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard1.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard2.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard3.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard4.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal1.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal2.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal3.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal4.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal5.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal6.lvl" />
+    <EmbeddedResource Include="Levels\LvlNormal7.lvl" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
