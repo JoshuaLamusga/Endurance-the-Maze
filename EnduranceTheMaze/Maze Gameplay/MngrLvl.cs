@@ -899,10 +899,10 @@ namespace EnduranceTheMaze
                 else
                 {
                     SfxPlaylist.Play(sndFinish);
-                    game.currentSeries.LevelNum++;
-                    if (game.currentSeries.LevelExists())
+                    game.mngrCampaign.CurrentSeries().LevelNum++;
+                    if (game.mngrCampaign.CurrentSeries().LevelExists())
                     {
-                        game.currentSeries.LoadCampaign();
+                        game.mngrCampaign.CurrentSeries().LoadCampaign();
                     }
                     else
                     {
@@ -914,8 +914,7 @@ namespace EnduranceTheMaze
                         }
                         else
                         {
-                            MessageBox.Show("-- Series completed --");
-                            game.GmState = GameState.stateCampaignModes;
+                            game.GmState = GameState.stateGameplaySeriesComplete;
                         }
                     }
                 }
@@ -1032,7 +1031,7 @@ namespace EnduranceTheMaze
 
                 game.GameSpriteBatch.DrawString(game.fntBold,
                     message, scrnCenter, Color.Black, 0,
-                    game.fntBold.MeasureString(message) * 0.5f,
+                    game.fntBold.MeasureString(message) / 2,
                     1, SpriteEffects.None, 0);
 
                 Vector2 scrnCenterShifted = new Vector2(
@@ -1040,8 +1039,8 @@ namespace EnduranceTheMaze
                 scrnBounds.Y + 16 + scrnBounds.Height / 2f);
 
                 game.GameSpriteBatch.DrawString(game.fntDefault,
-                    "Press enter to continue.", scrnCenter, Color.Black, 0,
-                    game.fntDefault.MeasureString(message) * 0.5f,
+                    "Press enter to continue.", scrnCenter + new Vector2(0, 24),
+                    Color.Black, 0, game.fntDefault.MeasureString("Press enter to continue.") / 2,
                     1, SpriteEffects.None, 0);
 
                 return;

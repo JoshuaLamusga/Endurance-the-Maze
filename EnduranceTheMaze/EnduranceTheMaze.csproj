@@ -43,7 +43,8 @@
   <ItemGroup>
     <Compile Include="GameState.cs" />
     <Compile Include="MainLoop.cs" />
-    <Compile Include="Maze Campaign\CmpgnSeries.cs" />
+    <Compile Include="Maze Campaign\LevelSeries.cs" />
+    <Compile Include="Maze Campaign\MngrCampaign.cs" />
     <Compile Include="Maze Editor\ImgBlock.cs" />
     <Compile Include="Maze Editor\ImgType.cs" />
     <Compile Include="Maze Editor\MngrEditor.cs" />

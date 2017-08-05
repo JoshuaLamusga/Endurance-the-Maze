@@ -32,11 +32,11 @@ namespace EnduranceTheMaze
         public MngrTitle mngrTitle;
         public MngrLvl mngrLvl;
         public MngrEditor mngrEditor;
-        public CmpgnSeries currentSeries; //The current series of levels.
-        public CmpgnSeries LvlSeriesEasy { get; private set; }
-        public CmpgnSeries LvlSeriesNormal { get; private set; }
-        public CmpgnSeries LvlSeriesHard { get; private set; }
-        public CmpgnSeries LvlSeriesDoom { get; private set; }
+        public MngrCampaign mngrCampaign;
+        public LevelSeries LvlSeriesEasy { get; private set; }
+        public LevelSeries LvlSeriesNormal { get; private set; }
+        public LevelSeries LvlSeriesHard { get; private set; }
+        public LevelSeries LvlSeriesDoom { get; private set; }
 
         //Sets up music.
         public SfxPlaylist playlist;
@@ -70,11 +70,17 @@ namespace EnduranceTheMaze
             mngrTitle = new MngrTitle(this);
             mngrLvl = new MngrLvl(this);
             mngrEditor = new MngrEditor(this);
-            LvlSeriesEasy = new CmpgnSeries(this, "EnduranceTheMaze.Levels.LvlEasy");
-            LvlSeriesNormal = new CmpgnSeries(this, "EnduranceTheMaze.Levels.LvlNormal");
-            LvlSeriesHard = new CmpgnSeries(this, "EnduranceTheMaze.Levels.LvlHard");
-            LvlSeriesDoom = new CmpgnSeries(this, "EnduranceTheMaze.Levels.LvlDoom");
-            currentSeries = null;
+            
+            LvlSeriesEasy = new LevelSeries(this, "EnduranceTheMaze.Levels.LvlEasy");
+            LvlSeriesNormal = new LevelSeries(this, "EnduranceTheMaze.Levels.LvlNormal");
+            LvlSeriesHard = new LevelSeries(this, "EnduranceTheMaze.Levels.LvlHard");
+            LvlSeriesDoom = new LevelSeries(this, "EnduranceTheMaze.Levels.LvlDoom");
+
+            mngrCampaign = new MngrCampaign(this);
+            mngrCampaign.AddSeries(LvlSeriesEasy);
+            mngrCampaign.AddSeries(LvlSeriesNormal);
+            mngrCampaign.AddSeries(LvlSeriesHard);
+            mngrCampaign.AddSeries(LvlSeriesDoom);
 
             //Initializes an empty playlist.
             playlist = new SfxPlaylist(this);
@@ -137,7 +143,8 @@ namespace EnduranceTheMaze
                 KbStateOld.IsKeyUp(Keys.Escape))
             {
                 //Goes from playing campaign to the campaign modes.
-                if (GmState == GameState.stateGameplay)
+                if (GmState == GameState.stateGameplay ||
+                    GmState == GameState.stateGameplaySeriesComplete)
                 {
                     GmState = GameState.stateCampaignModes;
                     SetScreenCaption("Campaign");
@@ -174,6 +181,9 @@ namespace EnduranceTheMaze
                 case GameState.stateGameplay:
                 case GameState.stateGameplayEditor:
                     mngrLvl.Update();
+                    break;
+                case GameState.stateGameplaySeriesComplete:
+                    mngrCampaign.Update();
                     break;
             }
 
@@ -233,6 +243,9 @@ namespace EnduranceTheMaze
                     GameSpriteBatch.End();
                     GameSpriteBatch.Begin();
                     mngrLvl.DrawHud();
+                    break;
+                case GameState.stateGameplaySeriesComplete:
+                    mngrCampaign.Draw();
                     break;
             }
 
