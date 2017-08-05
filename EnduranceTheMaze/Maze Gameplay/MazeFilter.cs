@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -28,7 +22,7 @@ namespace EnduranceTheMaze
     public class MazeFilter : GameObj
     {
         //Relevant assets.
-        public static Texture2D texFilter { get; private set; }
+        public static Texture2D TexFilter { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -41,14 +35,14 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Filter;
+            BlockType = Type.Filter;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texFilter);
-            sprite.depth = 0.405f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 19, 2, 10);
+            BlockSprite = new Sprite(true, TexFilter);
+            BlockSprite.depth = 0.405f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
             spriteAtlas.CenterOrigin();
         }
 
@@ -58,7 +52,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texFilter = Content.Load<Texture2D>("Content/Sprites/Game/sprFilter");
+            TexFilter = Content.Load<Texture2D>("Content/Sprites/Game/sprFilter");
         }
 
         /// <summary>
@@ -67,18 +61,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeFilter newBlock = new MazeFilter(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeFilter newBlock = new MazeFilter(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Custom variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -92,17 +86,17 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Determines solidity by custInt1.
-            if (custInt2 == 1)
+            if (CustInt2 == 1)
             {
-                isSolid = true;
+                IsSolid = true;
             }
             else
             {
-                isSolid = false;
+                IsSolid = false;
             }
 
             //Determines animation by enabledness.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 spriteAtlas.frameSpeed = 0.35f;
             }
@@ -113,19 +107,19 @@ namespace EnduranceTheMaze
             }
 
             //Handles activation behavior.
-            if (isEnabled && (isActivated || custInt1 == 0))
+            if (IsEnabled && (IsActivated || CustInt1 == 0))
             {
                 //Plays the activation sound.
-                game.playlist.Play(sndActivated, x, y);
+                game.playlist.Play(sndActivated, X, Y);
 
                 //Removes this block from the level.
                 game.mngrLvl.RemoveItem(this);
 
                 //Creates different blocks based on action type.
-                if (actionType > 4)
+                if (ActionType > 4)
                 {
                     game.mngrLvl.AddItem(Utils.BlockFromType
-                        (game, (Type)(actionType - 5), x, y, layer));
+                        (game, (Type)(ActionType - 5), X, Y, Layer));
                 }
             }
 
@@ -141,20 +135,20 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
-                if (custInt1 > 0)
+                if (CustInt1 > 0)
                 {
-                    game.mngrLvl.tooltip += "Filter: " + custInt1 +
+                    game.mngrLvl.tooltip += "Filter: " + CustInt1 +
                         " more passe(s) ";
                 }
                 else
                 {
                     game.mngrLvl.tooltip += "Filter";
                 }
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

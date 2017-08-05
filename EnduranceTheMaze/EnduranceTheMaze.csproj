@@ -98,7 +98,6 @@
     <Compile Include="MainInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleXnaFramework\SmoothRect.cs" />
-    <Compile Include="SimpleXnaFramework\Sound.cs" />
     <Compile Include="SimpleXnaFramework\Sprite.cs" />
     <Compile Include="SimpleXnaFramework\SpriteAtlas.cs" />
     <Compile Include="SimpleXnaFramework\SpriteDraw.cs" />

@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -29,7 +26,7 @@ namespace EnduranceTheMaze
     public class MazeClick : GameObj
     {
         //Relevant assets.
-        public static Texture2D texClick { get; private set; }
+        public static Texture2D TexClick { get; private set; }
 
         //Custom variables.
         SpriteAtlas spriteAtlas;
@@ -43,13 +40,13 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Click;
+            BlockType = Type.Click;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texClick);
-            sprite.depth = 0.201f;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 2, 1, 2);
+            BlockSprite = new Sprite(true, TexClick);
+            BlockSprite.depth = 0.201f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
         }
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texClick = Content.Load<Texture2D>("Content/Sprites/Game/sprClick");
+            TexClick = Content.Load<Texture2D>("Content/Sprites/Game/sprClick");
         }
 
         /// <summary>
@@ -67,20 +64,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeClick newBlock = new MazeClick(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeClick newBlock = new MazeClick(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Custom variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas);
             return newBlock;
         }
@@ -91,14 +88,14 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             #region Adjusts sprite and handles growing/shrinking animation.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 spriteAtlas.frame = 0;
                 if (isShrinking)
                 {
-                    sprite.scaleX -= 0.01f;
-                    sprite.scaleY -= 0.01f;
-                    if (sprite.scaleX <= 0.5f)
+                    BlockSprite.scaleX -= 0.01f;
+                    BlockSprite.scaleY -= 0.01f;
+                    if (BlockSprite.scaleX <= 0.5f)
                     {
                         isShrinking = false;
                     }
@@ -106,9 +103,9 @@ namespace EnduranceTheMaze
                 else
                 {
                     spriteAtlas.frame = 0;
-                    sprite.scaleX += 0.01f;
-                    sprite.scaleY += 0.01f;
-                    if (sprite.scaleX >= 1)
+                    BlockSprite.scaleX += 0.01f;
+                    BlockSprite.scaleY += 0.01f;
+                    if (BlockSprite.scaleX >= 1)
                     {
                         isShrinking = true;
                     }
@@ -120,62 +117,62 @@ namespace EnduranceTheMaze
             }
             #endregion
 
-            if (isEnabled)
+            if (IsEnabled)
             {
                 //The block activates itself when clicked.
-                if (Sprite.isIntersecting(sprite, new SmoothRect
+                if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
                 {
                     if (game.MsState.LeftButton == ButtonState.Pressed &&
                         game.MsStateOld.LeftButton == ButtonState.Released)
                     {
-                        isActivated = true;
+                        IsActivated = true;
                     }
                 }
 
                 //Handles activation behavior.
-                if (isActivated && actionType > 4)
+                if (IsActivated && ActionType > 4)
                 {
                     //Deletes itself if applicable.
-                    if (custInt1 == 1)
+                    if (CustInt1 == 1)
                     {
                         game.mngrLvl.RemoveItem(this);
                     }
 
                     //Gets all items matching the index to affect.
                     List<GameObj> items = game.mngrLvl.items.Where(o =>
-                        o.actionIndex == actionIndex2).ToList();
+                        o.ActionIndex == ActionIndex2).ToList();
 
                     //Filters out blocks on different layers.
-                    if (custInt2 == 1)
+                    if (CustInt2 == 1)
                     {
-                        items = items.Where(o => o.layer == layer).ToList();
+                        items = items.Where(o => o.Layer == Layer).ToList();
                     }
 
                     //Deactivates the item and plays sound.
-                    isActivated = false;
-                    game.playlist.Play(sndActivated, x, y);
+                    IsActivated = false;
+                    game.playlist.Play(sndActivated, X, Y);
 
-                    if (actionType == 5)
+                    if (ActionType == 5)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = true;
+                            item.IsActivated = true;
                         }
                     }
-                    else if (actionType == 6)
+                    else if (ActionType == 6)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = false;
+                            item.IsActivated = false;
                         }
                     }
-                    else if (actionType == 7)
+                    else if (ActionType == 7)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = !item.isActivated;
+                            item.IsActivated = !item.IsActivated;
                         }
                     }
                 }
@@ -193,13 +190,13 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Clickable";
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +23,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndTeleport;
-        public static Texture2D texTeleporter { get; private set; }
+        public static Texture2D TexTeleporter { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -39,12 +36,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Teleporter;
+            BlockType = Type.Teleporter;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texTeleporter);
-            sprite.depth = 0.412f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 4, 1, 4);
+            BlockSprite = new Sprite(true, TexTeleporter);
+            BlockSprite.depth = 0.412f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 4, 1, 4);
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndTeleport = Content.Load<SoundEffect>("Content/Sounds/sndTeleport");
-            texTeleporter = Content.Load<Texture2D>("Content/Sprites/Game/sprTeleport");
+            TexTeleporter = Content.Load<Texture2D>("Content/Sprites/Game/sprTeleport");
         }
 
         /// <summary>
@@ -63,20 +60,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeTeleporter newBlock = new MazeTeleporter(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeTeleporter newBlock = new MazeTeleporter(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, true);
             return newBlock;
         }
@@ -88,7 +85,7 @@ namespace EnduranceTheMaze
         {
             #region Adjusts sprite.
             //Adjusts the sprite frame.
-            if (custInt1 == 0)
+            if (CustInt1 == 0)
             {
                 spriteAtlas.frame = 0; //Sender.
             }
@@ -97,14 +94,14 @@ namespace EnduranceTheMaze
                 spriteAtlas.frame = 2; //Receiver.
             }
             //Depends on frame positions and texture.
-            if (!isEnabled)
+            if (!IsEnabled)
             {
                 spriteAtlas.frame++;
             }
             #endregion
 
             //Sender logic.
-            if (isEnabled && custInt1 == 0)
+            if (IsEnabled && CustInt1 == 0)
             {
                 //Blocks on this block, blocks on receivers, and receivers.
                 List<GameObj> itemsTop = new List<GameObj>();
@@ -113,23 +110,23 @@ namespace EnduranceTheMaze
 
                 //Gets a list of all blocks on the sender.
                 itemsTop = game.mngrLvl.items.Where(o =>
-                    o.x == x && o.y == y && o.layer == layer &&
-                    (o.sprite.depth < sprite.depth)).ToList();
+                    o.X == X && o.Y == Y && o.Layer == Layer &&
+                    (o.BlockSprite.depth < BlockSprite.depth)).ToList();
 
                 #region Interaction: MazeTurretBullet
                 itemsTop.AddRange(game.mngrLvl.items.Where(o =>
-                    o.type == Type.TurretBullet &&
-                    Math.Abs(x * 32 + 16 - o.x) < 16 &&
-                    Math.Abs(y * 32 + 16 - o.y) < 16 &&
-                    o.layer == layer));
+                    o.BlockType == Type.TurretBullet &&
+                    Math.Abs(X * 32 + 16 - o.X) < 16 &&
+                    Math.Abs(Y * 32 + 16 - o.Y) < 16 &&
+                    o.Layer == Layer));
                 #endregion
 
                 //Gets a list of all enabled receivers.
                 itemsNodes = game.mngrLvl.items.Where(o =>
-                    o.type == Type.Teleporter &&
-                    o.isEnabled &&
-                    o.custInt1 != 0 &&
-                    o.custInt2 == custInt2).ToList();
+                    o.BlockType == Type.Teleporter &&
+                    o.IsEnabled &&
+                    o.CustInt1 != 0 &&
+                    o.CustInt2 == CustInt2).ToList();
 
                 //Teleports blocks if receivers are available.
                 foreach (GameObj item in itemsTop)
@@ -139,33 +136,33 @@ namespace EnduranceTheMaze
                     {
                         //Gets a list of all solid blocks on the receiver.
                         itemsDestTop = game.mngrLvl.items.Where(o =>
-                            o.x == itemsNodes[i].x &&
-                            o.y == itemsNodes[i].y && o.layer ==
-                            itemsNodes[i].layer && o.isSolid).ToList();
+                            o.X == itemsNodes[i].X &&
+                            o.Y == itemsNodes[i].Y && o.Layer ==
+                            itemsNodes[i].Layer && o.IsSolid).ToList();
 
                         //Iterates through each block on the receiver.
                         for (int j = itemsDestTop.Count - 1; j >= 0; j--)
                         {
                             #region Interaction: MazeCrate
-                            if (itemsDestTop[j].type == Type.Crate)
+                            if (itemsDestTop[j].BlockType == Type.Crate)
                             {
                                 //Gets a list of all solid blocks in front.
                                 List<GameObj> itemsDestFront =
-                                    game.mngrLvl.items.Where(o => o.isSolid &&
-                                    o.x == itemsNodes[i].x +
-                                    (int)Utils.DirVector(item.dir).X &&
-                                    o.y == itemsNodes[i].y +
-                                    (int)Utils.DirVector(item.dir).Y &&
-                                    o.layer == itemsNodes[i].layer).ToList();
+                                    game.mngrLvl.items.Where(o => o.IsSolid &&
+                                    o.X == itemsNodes[i].X +
+                                    (int)Utils.DirVector(item.BlockDir).X &&
+                                    o.Y == itemsNodes[i].Y +
+                                    (int)Utils.DirVector(item.BlockDir).Y &&
+                                    o.Layer == itemsNodes[i].Layer).ToList();
 
                                 //Removes valid multiways from the list.
                                 #region Interaction: MazeMultiWay.cs
                                 itemsDestFront = itemsDestFront.Where(o =>
-                                    !(o.isEnabled &&
-                                    o.type == Type.MultiWay &&
-                                    ((o.custInt1 == 0 && o.dir == item.dir) ||
-                                    (o.custInt1 != 0 && (o.dir == item.dir ||
-                                    o.dir == Utils.DirOpp(dir)))))).ToList();
+                                    !(o.IsEnabled &&
+                                    o.BlockType == Type.MultiWay &&
+                                    ((o.CustInt1 == 0 && o.BlockDir == item.BlockDir) ||
+                                    (o.CustInt1 != 0 && (o.BlockDir == item.BlockDir ||
+                                    o.BlockDir == Utils.DirOpp(BlockDir)))))).ToList();
                                 #endregion
 
                                 /*Allows a block to enter the teleporter if
@@ -175,11 +172,11 @@ namespace EnduranceTheMaze
                                 if (itemsDestFront.Count == 0)
                                 {
                                     //Moves the crate; removes it from list.
-                                    itemsDestTop[j].x +=
-                                        (int)Utils.DirVector(item.dir).X;
-                                    itemsDestTop[j].y +=
-                                        (int)Utils.DirVector(item.dir).Y;
-                                    itemsDestTop[j].dir = item.dir;
+                                    itemsDestTop[j].X +=
+                                        (int)Utils.DirVector(item.BlockDir).X;
+                                    itemsDestTop[j].Y +=
+                                        (int)Utils.DirVector(item.BlockDir).Y;
+                                    itemsDestTop[j].BlockDir = item.BlockDir;
                                     itemsDestTop.RemoveAt(j);
                                 }
                             }
@@ -197,26 +194,26 @@ namespace EnduranceTheMaze
                     {
                         //Selects a receiver at random.
                         GameObj receiver =
-                            itemsNodes[Utils.rng.Next(itemsNodes.Count)];
+                            itemsNodes[Utils.Rng.Next(itemsNodes.Count)];
 
-                        game.playlist.Play(sndTeleport, x, y);
+                        game.playlist.Play(sndTeleport, X, Y);
 
                         #region Interaction: MazeTurretBullet
-                        if (item.type == Type.TurretBullet)
+                        if (item.BlockType == Type.TurretBullet)
                         {
-                            item.x = (int)Math.IEEERemainder(item.x, 32);
-                            item.y = (int)Math.IEEERemainder(item.y, 32);
-                            item.x += receiver.x * 32;
-                            item.y += receiver.y * 32;
+                            item.X = (int)Math.IEEERemainder(item.X, 32);
+                            item.Y = (int)Math.IEEERemainder(item.Y, 32);
+                            item.X += receiver.X * 32;
+                            item.Y += receiver.Y * 32;
                         }
                         else
                         {
-                            item.x = receiver.x;
-                            item.y = receiver.y;
+                            item.X = receiver.X;
+                            item.Y = receiver.Y;
                         }
                         #endregion
 
-                        item.layer = receiver.layer;
+                        item.Layer = receiver.Layer;
                     }
                 }
             }
@@ -233,22 +230,22 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
-                if (custInt1 == 0)
+                if (CustInt1 == 0)
                 {
                     game.mngrLvl.tooltip += "Sender " +
-                        "(channel " + custInt2 + ")";
+                        "(channel " + CustInt2 + ")";
                 }
                 else
                 {
                     game.mngrLvl.tooltip += "Receiver " +
-                        "(channel " + custInt2 + ")";
+                        "(channel " + CustInt2 + ")";
                 }
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

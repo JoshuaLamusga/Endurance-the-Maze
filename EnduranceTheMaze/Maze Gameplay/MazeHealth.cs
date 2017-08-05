@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -23,7 +19,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndCollectHealth;
-        public static Texture2D texHealth { get; private set; }
+        public static Texture2D TexHealth { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -36,12 +32,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Health;
+            BlockType = Type.Health;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texHealth);
-            sprite.depth = 0.206f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 19, 2, 10);
+            BlockSprite = new Sprite(true, TexHealth);
+            BlockSprite.depth = 0.206f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
             spriteAtlas.frameSpeed = 0.2f;
         }
 
@@ -52,7 +48,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndCollectHealth = Content.Load<SoundEffect>("Content/Sounds/sndCollectHealth");
-            texHealth = Content.Load<Texture2D>("Content/Sprites/Game/sprHealth");
+            TexHealth = Content.Load<Texture2D>("Content/Sprites/Game/sprHealth");
         }
 
         /// <summary>
@@ -61,20 +57,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeHealth newBlock = new MazeHealth(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeHealth newBlock = new MazeHealth(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
             return newBlock;
         }
@@ -86,8 +82,8 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all actors on the health object.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
                 //If there is at least one actor touching the health, the
                 //first in the list gains 25 hp (no more than 100).
@@ -100,7 +96,7 @@ namespace EnduranceTheMaze
                     }
 
                     game.mngrLvl.RemoveItem(this);
-                    game.playlist.Play(sndCollectHealth, x, y);
+                    game.playlist.Play(sndCollectHealth, X, Y);
                 }
 
             spriteAtlas.Update(true);
@@ -115,9 +111,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Health | ";
             }

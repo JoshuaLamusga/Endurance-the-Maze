@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +22,7 @@ namespace EnduranceTheMaze
     public class MazeRotate : GameObj
     {
         //Relevant assets.
-        public static Texture2D texRotate { get; private set; }
+        public static Texture2D TexRotate { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -42,14 +38,14 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Rotate;
+            BlockType = Type.Rotate;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texRotate);
-            sprite.depth = 0.418f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 2, 1, 2);
+            BlockSprite = new Sprite(true, TexRotate);
+            BlockSprite.depth = 0.418f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
             spriteAtlas.CenterOrigin();
 
             //Sets positional values.
@@ -63,7 +59,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texRotate = Content.Load<Texture2D>("Content/Sprites/Game/sprRotate");
+            TexRotate = Content.Load<Texture2D>("Content/Sprites/Game/sprRotate");
         }
 
         /// <summary>
@@ -72,21 +68,21 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeRotate newBlock = new MazeRotate(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeRotate newBlock = new MazeRotate(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Custom variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
             newBlock.xStart = xStart;
             newBlock.yStart = yStart;
@@ -99,7 +95,7 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             #region Adjusts sprite.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 spriteAtlas.frame = 0;
             }
@@ -109,11 +105,11 @@ namespace EnduranceTheMaze
             }
             #endregion
 
-            if (isActivated && actionType > 4)
+            if (IsActivated && ActionType > 4)
             {
                 //Deactivates the object and plays a sound.
-                isActivated = false;
-                game.playlist.Play(sndActivated, x, y);
+                IsActivated = false;
+                game.playlist.Play(sndActivated, X, Y);
 
                 //Saves the new positions of each block so the
                 //transposition doesn't affect them twice.
@@ -122,30 +118,30 @@ namespace EnduranceTheMaze
                 List<int> queueItemsY = new List<int>();
 
                 //Iterates through each affected space.
-                for (int xx = 0; xx < custInt1; xx++)
+                for (int xx = 0; xx < CustInt1; xx++)
                 {
-                    for (int yy = 0; yy < custInt1; yy++)
+                    for (int yy = 0; yy < CustInt1; yy++)
                     {
                         //Gets a list of all blocks in the space.
                         List<GameObj> blocks = game.mngrLvl.items
-                            .Where(o => o.layer == layer &&
-                            o.x == xStart + xx && o.y == yStart + yy)
+                            .Where(o => o.Layer == Layer &&
+                            o.X == xStart + xx && o.Y == yStart + yy)
                             .ToList();
 
                         foreach (GameObj block in blocks)
                         {
                             queueItems.Add(block);
-                            if (actionType == 5 || actionType == 7)
+                            if (ActionType == 5 || ActionType == 7)
                             {
-                                queueItemsX.Add(xStart + (custInt1 - yy - 1));
+                                queueItemsX.Add(xStart + (CustInt1 - yy - 1));
                             }
                             else
                             {
                                 queueItemsX.Add(xStart + yy);
                             }
-                            if (actionType == 6 || actionType == 7)
+                            if (ActionType == 6 || ActionType == 7)
                             {
-                                queueItemsY.Add(yStart + (custInt1 - xx - 1));
+                                queueItemsY.Add(yStart + (CustInt1 - xx - 1));
                             }
                             else
                             {
@@ -158,8 +154,8 @@ namespace EnduranceTheMaze
                 //Moves each block synchronously.
                 for (int i = 0; i < queueItems.Count; i++)
                 {
-                    queueItems[i].x = queueItemsX[i];
-                    queueItems[i].y = queueItemsY[i];
+                    queueItems[i].X = queueItemsX[i];
+                    queueItems[i].Y = queueItemsY[i];
                 }
             }
 
@@ -175,13 +171,13 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Rotate";
                 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += " (disabled)";
                 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EnduranceTheMaze
+﻿namespace EnduranceTheMaze
 {
     /// <summary>
     /// Represents directions of movement.

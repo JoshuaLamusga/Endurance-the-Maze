@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -24,7 +20,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndFreeze;
-        public static Texture2D texFreeze { get; private set; }
+        public static Texture2D TexFreeze { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -37,14 +33,14 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Freeze;
+            BlockType = Type.Freeze;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texFreeze);
-            sprite.depth = 0.203f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 10, 1, 10);
+            BlockSprite = new Sprite(true, TexFreeze);
+            BlockSprite.depth = 0.203f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 10, 1, 10);
             spriteAtlas.frameSpeed = 0.4f;
             spriteAtlas.CenterOrigin();
         }
@@ -56,7 +52,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndFreeze = Content.Load<SoundEffect>("Content/Sounds/sndFreeze");
-            texFreeze = Content.Load<Texture2D>("Content/Sprites/Game/sprFreeze");
+            TexFreeze = Content.Load<Texture2D>("Content/Sprites/Game/sprFreeze");
         }
 
         /// <summary>
@@ -65,20 +61,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeFreeze newBlock = new MazeFreeze(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeFreeze newBlock = new MazeFreeze(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Custom variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas);
 
             return newBlock;
@@ -90,22 +86,22 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Slowly rotates the sprite.
-            sprite.angle += 0.05f;
+            BlockSprite.angle += 0.05f;
 
             //If actors are synchronized.
             if (game.mngrLvl.opSyncActors)
             {
                 //Gets a list of all actors on the freeze object.
                 List<GameObj> items = game.mngrLvl.items.Where(o =>
-                    o.x == x && o.y == y && o.layer == layer &&
-                    o.type == Type.Actor).ToList();
+                    o.X == X && o.Y == Y && o.Layer == Layer &&
+                    o.BlockType == Type.Actor).ToList();
 
                 //Disables all actors touching the freeze ice.
                 foreach (GameObj item in items)
                 {
-                    item.isEnabled = false;
+                    item.IsEnabled = false;
                     game.mngrLvl.RemoveItem(this);
-                    game.playlist.Play(sndFreeze, x, y);
+                    game.playlist.Play(sndFreeze, X, Y);
                 }
             }
 
@@ -121,9 +117,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Freeze | ";
             }

@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +22,7 @@ namespace EnduranceTheMaze
         //Relevant assets.
         public static SoundEffect sndStairsDown;
         public static SoundEffect sndStairsUp;
-        public static Texture2D texStairs { get; private set; }
+        public static Texture2D TexStairs { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -39,12 +35,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Stairs;
+            BlockType = Type.Stairs;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texStairs);
-            sprite.depth = 0.406f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 2, 1, 2);
+            BlockSprite = new Sprite(true, TexStairs);
+            BlockSprite.depth = 0.406f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
         }
 
         /// <summary>
@@ -55,7 +51,7 @@ namespace EnduranceTheMaze
         {
             sndStairsDown = Content.Load<SoundEffect>("Content/Sounds/sndStairsDown");
             sndStairsUp = Content.Load<SoundEffect>("Content/Sounds/sndStairsUp");
-            texStairs = Content.Load<Texture2D>("Content/Sprites/Game/sprStairs");
+            TexStairs = Content.Load<Texture2D>("Content/Sprites/Game/sprStairs");
         }
 
         /// <summary>
@@ -64,20 +60,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeStairs newBlock = new MazeStairs(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeStairs newBlock = new MazeStairs(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, true);
             return newBlock;
         }
@@ -88,7 +84,7 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Adjusts the sprite frame.
-            if (custInt1 == 0)
+            if (CustInt1 == 0)
             {
                 spriteAtlas.frame = 0; //up.
             }
@@ -99,31 +95,31 @@ namespace EnduranceTheMaze
 
             //Gets a list of all actors on the stairs object.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                (o.type == Type.Actor || o.type == Type.Enemy ||
-                o.type == Type.Crate)).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                (o.BlockType == Type.Actor || o.BlockType == Type.Enemy ||
+                o.BlockType == Type.Crate)).ToList();
 
             //If there is at least one actor/enemy/crate touching the stairs.
             foreach (GameObj item in items)
             {
                 //Gets a list of all solids in the destination.
                 List<GameObj> itemsDest;
-                if (custInt1 == 0)
+                if (CustInt1 == 0)
                 {
-                    itemsDest = game.mngrLvl.items.Where(o => o.isSolid &&
-                        o.x == x && o.y == y && o.layer == layer + 1).ToList();
+                    itemsDest = game.mngrLvl.items.Where(o => o.IsSolid &&
+                        o.X == X && o.Y == Y && o.Layer == Layer + 1).ToList();
                 }
                 else
                 {
-                    itemsDest = game.mngrLvl.items.Where(o => o.isSolid &&
-                        o.x == x && o.y == y && o.layer == layer - 1).ToList();
+                    itemsDest = game.mngrLvl.items.Where(o => o.IsSolid &&
+                        o.X == X && o.Y == Y && o.Layer == Layer - 1).ToList();
                 }
 
                 #region Interaction: MazeMultiWay.cs
-                itemsDest = itemsDest.Where(o => !(o.type == Type.MultiWay &&
-                    o.isEnabled && ((o.custInt1 == 0 && o.dir == item.dir) ||
-                    (o.custInt1 != 0 && (o.dir == item.dir ||
-                    o.dir == Utils.DirOpp(item.dir)))))).ToList();
+                itemsDest = itemsDest.Where(o => !(o.BlockType == Type.MultiWay &&
+                    o.IsEnabled && ((o.CustInt1 == 0 && o.BlockDir == item.BlockDir) ||
+                    (o.CustInt1 != 0 && (o.BlockDir == item.BlockDir ||
+                    o.BlockDir == Utils.DirOpp(item.BlockDir)))))).ToList();
                 #endregion
 
                 //Removes crates from the list if they can be pushed out of
@@ -132,37 +128,37 @@ namespace EnduranceTheMaze
                 for (int i = itemsDest.Count - 1; i >= 0; i--)
                 {
                     #region Interaction: MazeCrate.cs
-                    if (itemsDest[i].type == Type.Crate)
+                    if (itemsDest[i].BlockType == Type.Crate)
                     {
-                        if (custInt1 == 0)
+                        if (CustInt1 == 0)
                         {
-                            itemsFront = game.mngrLvl.items.Where(o => o.isSolid &&
-                                o.x == x + (int)Utils.DirVector(item.dir).X &&
-                                o.y == y + (int)Utils.DirVector(item.dir).Y &&
-                                o.layer == layer + 1).ToList();
+                            itemsFront = game.mngrLvl.items.Where(o => o.IsSolid &&
+                                o.X == X + (int)Utils.DirVector(item.BlockDir).X &&
+                                o.Y == Y + (int)Utils.DirVector(item.BlockDir).Y &&
+                                o.Layer == Layer + 1).ToList();
                         }
                         else
                         {
-                            itemsFront = game.mngrLvl.items.Where(o => o.isSolid &&
-                                o.x == x + (int)Utils.DirVector(item.dir).X &&
-                                o.y == y + (int)Utils.DirVector(item.dir).Y &&
-                                o.layer == layer - 1).ToList();
+                            itemsFront = game.mngrLvl.items.Where(o => o.IsSolid &&
+                                o.X == X + (int)Utils.DirVector(item.BlockDir).X &&
+                                o.Y == Y + (int)Utils.DirVector(item.BlockDir).Y &&
+                                o.Layer == Layer - 1).ToList();
                         }
 
                         #region Interaction: MazeMultiWay.cs
-                        itemsFront = itemsFront.Where(o => !(o.isEnabled &&
-                            o.type == Type.MultiWay && ((o.custInt1 == 0 &&
-                            o.dir == item.dir) || (o.custInt1 != 0 &&
-                            (o.dir == item.dir ||
-                            o.dir == Utils.DirOpp(dir)))))).ToList();
+                        itemsFront = itemsFront.Where(o => !(o.IsEnabled &&
+                            o.BlockType == Type.MultiWay && ((o.CustInt1 == 0 &&
+                            o.BlockDir == item.BlockDir) || (o.CustInt1 != 0 &&
+                            (o.BlockDir == item.BlockDir ||
+                            o.BlockDir == Utils.DirOpp(BlockDir)))))).ToList();
                         #endregion
 
                         if (itemsFront.Count == 0)
                         {
                             //Moves the crate and removes it from itemsTop.
-                            itemsDest[i].x += (int)Utils.DirVector(item.dir).X;
-                            itemsDest[i].y += (int)Utils.DirVector(item.dir).Y;
-                            itemsDest[i].dir = item.dir;
+                            itemsDest[i].X += (int)Utils.DirVector(item.BlockDir).X;
+                            itemsDest[i].Y += (int)Utils.DirVector(item.BlockDir).Y;
+                            itemsDest[i].BlockDir = item.BlockDir;
                             itemsDest.RemoveAt(i);
                         }
                     }
@@ -172,15 +168,15 @@ namespace EnduranceTheMaze
                 //Transports the block if nothing covers the destination.
                 if (itemsDest.Count == 0)
                 {
-                    if (custInt1 == 0)
+                    if (CustInt1 == 0)
                     {
-                        item.layer++;
-                        game.playlist.Play(sndStairsUp, x, y);
+                        item.Layer++;
+                        game.playlist.Play(sndStairsUp, X, Y);
                     }
                     else
                     {
-                        item.layer--;
-                        game.playlist.Play(sndStairsDown, x, y);
+                        item.Layer--;
+                        game.playlist.Play(sndStairsDown, X, Y);
                     }
                 }
             }
@@ -197,11 +193,11 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
-                if (custInt1 == 0)
+                if (CustInt1 == 0)
                 {
                     game.mngrLvl.tooltip += "Stairs (ascending) | ";
                 }

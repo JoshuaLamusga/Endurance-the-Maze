@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace EnduranceTheMaze
 {
@@ -21,7 +16,7 @@ namespace EnduranceTheMaze
     public class MazeBelt : GameObj
     {
         //Relevant assets.
-        public static Texture2D texBelt { get; private set; }
+        public static Texture2D TexBelt { get; private set; }
 
         //Sprite information.
         public SpriteAtlas spriteAtlas; //Set by MngrLvl.cs.
@@ -34,16 +29,16 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Belt;
+            BlockType = Type.Belt;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texBelt);
-            sprite.depth = 0.401f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
+            BlockSprite = new Sprite(true, TexBelt);
+            BlockSprite.depth = 0.401f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
 
             //Custom variables.
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 9, 1, 9);
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 9, 1, 9);
             spriteAtlas.CenterOrigin();
         }
 
@@ -53,7 +48,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texBelt = Content.Load<Texture2D>("Content/Sprites/Game/sprBelt");
+            TexBelt = Content.Load<Texture2D>("Content/Sprites/Game/sprBelt");
         }
 
         /// <summary>
@@ -62,18 +57,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeBelt newBlock = new MazeBelt(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeBelt newBlock = new MazeBelt(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = spriteAtlas;
             return newBlock;
         }
@@ -85,28 +80,28 @@ namespace EnduranceTheMaze
         {
             //Updates the belt sprite by direction.
             //Depends on the texture frames.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
-                sprite.angle = 0;
+                BlockSprite.angle = 0;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
-                sprite.angle = (float)(Math.PI / 2);
+                BlockSprite.angle = (float)(Math.PI / 2);
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
-                sprite.angle = (float)(Math.PI);
+                BlockSprite.angle = (float)(Math.PI);
             }
             else
             {
-                sprite.angle = (float)(-Math.PI / 2);
+                BlockSprite.angle = (float)(-Math.PI / 2);
             }
 
             spriteAtlas.Update(true);
             base.Update();
 
             //Determines the belt's image speed.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 spriteAtlas.frameSpeed = 0.25f;
             }
@@ -124,9 +119,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Belt | ";
             }

@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -28,7 +24,7 @@ namespace EnduranceTheMaze
     public class MazePanel : GameObj
     {
         //Relevant assets.
-        public static Texture2D texPanel { get; private set; }
+        public static Texture2D TexPanel { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -44,12 +40,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Panel;
+            BlockType = Type.Panel;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texPanel);
-            sprite.depth = 0.414f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 4, 1, 4);
+            BlockSprite = new Sprite(true, TexPanel);
+            BlockSprite.depth = 0.414f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 4, 1, 4);
 
             //False by default because it hasn't been activated.
             hasActivated = false;
@@ -62,7 +58,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texPanel = Content.Load<Texture2D>("Content/Sprites/Game/sprPanel");
+            TexPanel = Content.Load<Texture2D>("Content/Sprites/Game/sprPanel");
         }
 
         /// <summary>
@@ -71,20 +67,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazePanel newBlock = new MazePanel(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;            
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazePanel newBlock = new MazePanel(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;            
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.hasActivated = hasActivated;
             newBlock.isHeld = isHeld;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, true);
@@ -98,10 +94,10 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all solid blocks in the same location.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.isSolid).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.IsSolid).ToList();
 
-            if (isEnabled)
+            if (IsEnabled)
             {
                 //Sets whether the panel is pressed down or not.
                 if (items.Count > 0)
@@ -114,33 +110,33 @@ namespace EnduranceTheMaze
                 }
 
                 //If activated or held down.
-                if (isActivated || isHeld)
+                if (IsActivated || isHeld)
                 {
-                    isActivated = false;
+                    IsActivated = false;
 
                     //All connected items are activated.
-                    if (!hasActivated && actionType > 4)
+                    if (!hasActivated && ActionType > 4)
                     {
                         //Gets all items matching the index to affect.
                         items = game.mngrLvl.items.Where(o =>
-                            o.actionIndex == actionIndex2).ToList();
+                            o.ActionIndex == ActionIndex2).ToList();
 
                         //Filters out blocks on different layers.
-                        if (custInt1 == 1)
+                        if (CustInt1 == 1)
                         {
-                            items = items.Where(o => o.layer == layer)
+                            items = items.Where(o => o.Layer == Layer)
                                 .ToList();
                         }
 
                         //If there are linked items to activate, plays sound.
                         if (items.Count != 0)
                         {
-                            game.playlist.Play(sndActivated, x, y);
+                            game.playlist.Play(sndActivated, X, Y);
                         }
 
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = true;
+                            item.IsActivated = true;
                         }
                     }
 
@@ -153,25 +149,25 @@ namespace EnduranceTheMaze
                     {
                         //Gets all items matching the index to affect.
                         items = game.mngrLvl.items.Where(o =>
-                            o.actionIndex == actionIndex2).ToList();
+                            o.ActionIndex == ActionIndex2).ToList();
 
                         //Filters out blocks on different layers.
-                        if (custInt1 == 1)
+                        if (CustInt1 == 1)
                         {
                             items = items.Where(o =>
-                                o.layer == layer).ToList();
+                                o.Layer == Layer).ToList();
                         }
 
-                        if (actionType == 5)
+                        if (ActionType == 5)
                         {
                             foreach (GameObj item in items)
                             {
-                                item.isActivated = false;
+                                item.IsActivated = false;
                             }
                         }
-                        else if (actionType == 7)
+                        else if (ActionType == 7)
                         {
-                            isEnabled = false;
+                            IsEnabled = false;
                         }
                     }
 
@@ -191,7 +187,7 @@ namespace EnduranceTheMaze
                 spriteAtlas.frame = 1; //Pressed.
             }
             //Depends on frame positions and texture.
-            if (!isEnabled)
+            if (!IsEnabled)
             {
                 spriteAtlas.frame += 2;
             }
@@ -209,18 +205,18 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Panel ";
 
-                if (actionType == 7)
+                if (ActionType == 7)
                 {
                     game.mngrLvl.tooltip += "(only activates once)";
                 }
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

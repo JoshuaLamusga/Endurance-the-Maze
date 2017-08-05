@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace EnduranceTheMaze
 {
@@ -204,7 +204,7 @@ namespace EnduranceTheMaze
         /// Checks for a bounding box intersection of two sprites. Takes
         /// scaling and origin into account. Ignores rotation.
         /// </summary>
-        public static bool isIntersecting(Sprite spr1, Sprite spr2)
+        public static bool IsIntersecting(Sprite spr1, Sprite spr2)
         {
             //Creates smooth rects from the sprite destinations, which
             //already take scaling into account.
@@ -229,7 +229,7 @@ namespace EnduranceTheMaze
         /// Checks for a bounding box intersection of two sprites. Takes
         /// scaling and origin into account. Ignores rotation.
         /// </summary>
-        public static bool isIntersecting(Sprite spr1, SmoothRect rect2)
+        public static bool IsIntersecting(Sprite spr1, SmoothRect rect2)
         {
             //Creates smooth rects from the sprite and another rectangle,
             //which already take scaling into account.
@@ -257,7 +257,7 @@ namespace EnduranceTheMaze
         /// </summary>
         /// <param name="spr1">Bounding rectangle of the first sprite.</param>
         /// <param name="spr2">Bouding rectangle of the second sprite.</param>
-        public static bool isIntersectingPixels(Sprite sprA, Sprite sprB, MainLoop game)
+        public static bool IsIntersectingPixels(Sprite sprA, Sprite sprB, MainLoop game)
         {
             //Sets up bounding rectangle data.
             Rectangle rect1 = sprA.rectDest.ToRect();

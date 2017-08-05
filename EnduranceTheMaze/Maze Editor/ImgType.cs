@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
@@ -35,17 +30,17 @@ namespace EnduranceTheMaze
             //Depends on texture dimensions.
             if (game.MsState.LeftButton == ButtonState.Pressed &&
                 game.MsState.X >= 0 && game.MsState.X <= 32 &&
-                game.MsState.Y >= sprite.rectDest.Y &&
-                game.MsState.Y <= sprite.rectDest.Y + 32)
+                game.MsState.Y >= BlockSprite.rectDest.Y &&
+                game.MsState.Y <= BlockSprite.rectDest.Y + 32)
             {
-                game.mngrEditor.activeType = type;
+                game.mngrEditor.activeType = BlockType;
             }
 
             base.Update();
 
             //Synchronizes sprite position to location. (Req MngrEditor.cs).
-            sprite.rectDest.X = 0;
-            sprite.rectDest.Y = y * 32 + game.mngrEditor.sidebarScroll;
+            BlockSprite.rectDest.X = 0;
+            BlockSprite.rectDest.Y = Y * 32 + game.mngrEditor.sidebarScroll;
         }
 
         public override void Draw()
@@ -53,10 +48,10 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Draws a rectangle over the sprite if it's active.
-            if (type == game.mngrEditor.activeType)
+            if (BlockType == game.mngrEditor.activeType)
             {
-                game.GameSpriteBatch.Draw(MngrLvl.texPixel, new Rectangle(
-                    0, (int)sprite.rectDest.Y, 32, 32), Color.Yellow * 0.5f);
+                game.GameSpriteBatch.Draw(MngrLvl.TexPixel, new Rectangle(
+                    0, (int)BlockSprite.rectDest.Y, 32, 32), Color.Yellow * 0.5f);
             }
         }
     }

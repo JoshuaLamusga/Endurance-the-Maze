@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -23,7 +19,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndCollectGoal;
-        public static Texture2D texGoal { get; private set; }
+        public static Texture2D TexGoal { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -36,14 +32,14 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Goal;
+            BlockType = Type.Goal;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texGoal);
-            sprite.depth = 0.202f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 9, 1, 9);
+            BlockSprite = new Sprite(true, TexGoal);
+            BlockSprite.depth = 0.202f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 9, 1, 9);
             spriteAtlas.frameSpeed = 0.2f;
             spriteAtlas.CenterOrigin();
         }
@@ -55,7 +51,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndCollectGoal = Content.Load<SoundEffect>("Content/Sounds/sndCollectGoal");
-            texGoal = Content.Load<Texture2D>("Content/Sprites/Game/sprGoal");
+            TexGoal = Content.Load<Texture2D>("Content/Sprites/Game/sprGoal");
         }
 
         /// <summary>
@@ -64,18 +60,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeGoal newBlock = new MazeGoal(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeGoal newBlock = new MazeGoal(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Custom variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -90,15 +86,15 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all actors on the goal object.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
             //If there is at least one actor touching the goal.
             if (items.Count != 0)
             {
-                game.mngrLvl.actorGoals++;
+                game.mngrLvl.ActorGoals++;
                 game.mngrLvl.RemoveItem(this);
-                game.playlist.Play(sndCollectGoal, x, y);
+                game.playlist.Play(sndCollectGoal, X, Y);
             }
 
             spriteAtlas.Update(true);
@@ -113,9 +109,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Goal | ";
             }

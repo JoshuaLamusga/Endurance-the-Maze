@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 
 namespace EnduranceTheMaze
@@ -35,7 +29,7 @@ namespace EnduranceTheMaze
         private Sprite _sprite;
 
         //Contains a sprite.
-        public Sprite sprite
+        public Sprite BlockSprite
         {
             get
             {
@@ -48,13 +42,13 @@ namespace EnduranceTheMaze
                 //Sets the initial position.
                 if (isSynchronized)
                 {
-                    _sprite.rectDest.X = x * 32;
-                    _sprite.rectDest.Y = y * 32;
+                    _sprite.rectDest.X = X * 32;
+                    _sprite.rectDest.Y = Y * 32;
                 }
                 else
                 {
-                    _sprite.rectDest.X = x;
-                    _sprite.rectDest.Y = y;
+                    _sprite.rectDest.X = X;
+                    _sprite.rectDest.Y = Y;
                 }
             }
         }
@@ -63,7 +57,7 @@ namespace EnduranceTheMaze
         private int _x;
         private int _y;
         private int _layer;
-        public virtual int x
+        public virtual int X
         {
             get
             {
@@ -75,7 +69,7 @@ namespace EnduranceTheMaze
                 _x = value;
             }
         }
-        public virtual int y
+        public virtual int Y
         {
             get
             {
@@ -87,7 +81,7 @@ namespace EnduranceTheMaze
                 _y = value;
             }
         }
-        public virtual int layer
+        public virtual int Layer
         {
             get
             {
@@ -104,11 +98,11 @@ namespace EnduranceTheMaze
         public bool isSynchronized;
 
         //Block identity by type.
-        public Type type { get; internal set; }
+        public Type BlockType { get; internal set; }
 
         //Block's facing direction.
         private Dir _dir = Dir.Right;
-        public virtual Dir dir
+        public virtual Dir BlockDir
         {
             get
             {
@@ -125,7 +119,7 @@ namespace EnduranceTheMaze
         private bool _isSolid;
         private bool _isEnabled;
         private bool _isVisible;
-        public virtual bool isSolid
+        public virtual bool IsSolid
         {
             get
             {
@@ -137,7 +131,7 @@ namespace EnduranceTheMaze
                 _isSolid = value;
             }
         }
-        public virtual bool isEnabled
+        public virtual bool IsEnabled
         {
             get
             {
@@ -149,7 +143,7 @@ namespace EnduranceTheMaze
                 _isEnabled = value;
             }
         }
-        public virtual bool isVisible
+        public virtual bool IsVisible
         {
             get
             {
@@ -167,7 +161,7 @@ namespace EnduranceTheMaze
         private int _actionType = -1; //The activation behavior.
         private int _actionIndex2 = -1; //The channel to activate (actuators).
         private bool _isActivated = false; //If the block is activated.
-        public virtual int actionIndex
+        public virtual int ActionIndex
         {
             get
             {
@@ -179,7 +173,7 @@ namespace EnduranceTheMaze
                 _actionIndex = value;
             }
         }
-        public virtual int actionType
+        public virtual int ActionType
         {
             get
             {
@@ -191,7 +185,7 @@ namespace EnduranceTheMaze
                 _actionType = value;
             }
         }
-        public virtual int actionIndex2
+        public virtual int ActionIndex2
         {
             get
             {
@@ -203,7 +197,7 @@ namespace EnduranceTheMaze
                 _actionIndex2 = value;
             }
         }
-        public virtual bool isActivated
+        public virtual bool IsActivated
         {
             get
             {
@@ -219,7 +213,7 @@ namespace EnduranceTheMaze
         //Custom properties for blocks. They're virtual for properties.
         private int _custInt1 = 0, _custInt2 = 0;
         private string _custStr = "";
-        public virtual int custInt1
+        public virtual int CustInt1
         {
             get
             {
@@ -231,7 +225,7 @@ namespace EnduranceTheMaze
                 _custInt1 = value;
             }
         }
-        public virtual int custInt2
+        public virtual int CustInt2
         {
             get
             {
@@ -243,7 +237,7 @@ namespace EnduranceTheMaze
                 _custInt2 = value;
             }
         }
-        public virtual string custStr
+        public virtual string CustStr
         {
             get
             {
@@ -265,12 +259,12 @@ namespace EnduranceTheMaze
         public GameObj(MainLoop game, int x, int y, int layer)
         {
             this.game = game;
-            this.x = x;
-            this.y = y;
-            this.layer = layer;
-            isSolid = false;
-            isEnabled = true;
-            isVisible = true;
+            this.X = x;
+            this.Y = y;
+            this.Layer = layer;
+            IsSolid = false;
+            IsEnabled = true;
+            IsVisible = true;
             isSynchronized = true;
         }
 
@@ -296,35 +290,35 @@ namespace EnduranceTheMaze
         public virtual void Update()
         {
             //Performs activation behaviors.
-            if (isActivated)
+            if (IsActivated)
             {
-                if (actionType == 0)
+                if (ActionType == 0)
                 {
-                    isActivated = false;
-                    isVisible = !isVisible;
+                    IsActivated = false;
+                    IsVisible = !IsVisible;
                 }
-                else if (actionType == 1)
+                else if (ActionType == 1)
                 {
-                    isActivated = false;
-                    isEnabled = !isEnabled;
+                    IsActivated = false;
+                    IsEnabled = !IsEnabled;
                 }
-                else if (actionType == 2 && isEnabled)
+                else if (ActionType == 2 && IsEnabled)
                 {
-                    isActivated = false;
-                    dir = Utils.DirNext(dir);
-                    game.playlist.Play(sndActivated, x, y);
+                    IsActivated = false;
+                    BlockDir = Utils.DirNext(BlockDir);
+                    game.playlist.Play(sndActivated, X, Y);
                 }
-                else if (actionType == 3 && isEnabled)
+                else if (ActionType == 3 && IsEnabled)
                 {
-                    isActivated = false;
-                    dir = Utils.DirPrev(dir);
-                    game.playlist.Play(sndActivated, x, y);
+                    IsActivated = false;
+                    BlockDir = Utils.DirPrev(BlockDir);
+                    game.playlist.Play(sndActivated, X, Y);
                 }
-                else if (actionType == 4 && isEnabled)
+                else if (ActionType == 4 && IsEnabled)
                 {
-                    isActivated = false;
+                    IsActivated = false;
                     game.mngrLvl.RemoveItem(this);
-                    game.playlist.Play(sndActivated, x, y);
+                    game.playlist.Play(sndActivated, X, Y);
                 }
             }/*
             else
@@ -344,13 +338,13 @@ namespace EnduranceTheMaze
             //Synchronizes sprite position to location.
             if (isSynchronized)
             {
-                sprite.rectDest.X = x * 32;
-                sprite.rectDest.Y = y * 32;
+                BlockSprite.rectDest.X = X * 32;
+                BlockSprite.rectDest.Y = Y * 32;
             }
             else
             {
-                sprite.rectDest.X = x;
-                sprite.rectDest.Y = y;
+                BlockSprite.rectDest.X = X;
+                BlockSprite.rectDest.Y = Y;
             }
         }
 
@@ -360,9 +354,9 @@ namespace EnduranceTheMaze
         /// <param name="spriteBatch">The sprite batch to draw with.</param>
         public virtual void Draw()
         {
-            if (isVisible)
+            if (IsVisible)
             {
-                sprite.Draw(game.GameSpriteBatch);
+                BlockSprite.Draw(game.GameSpriteBatch);
             }
         }
     }

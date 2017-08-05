@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -23,7 +19,7 @@ namespace EnduranceTheMaze
     public class MazeSpike : GameObj
     {
         //Relevant assets.
-        public static Texture2D texSpike { get; private set; }
+        public static Texture2D TexSpike { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;     
@@ -36,14 +32,14 @@ namespace EnduranceTheMaze
             base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Spike;
+            BlockType = Type.Spike;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texSpike);
-            sprite.depth = 0.409f;
-            sprite.drawBehavior = SpriteDraw.all;
-            sprite.originOffset = true;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 19, 2, 10);
+            BlockSprite = new Sprite(true, TexSpike);
+            BlockSprite.depth = 0.409f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            BlockSprite.originOffset = true;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
             spriteAtlas.frameSpeed = 0.2f;
             spriteAtlas.CenterOrigin();
         }
@@ -54,7 +50,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texSpike = Content.Load<Texture2D>("Content/Sprites/Game/sprSpike");
+            TexSpike = Content.Load<Texture2D>("Content/Sprites/Game/sprSpike");
         }
 
         /// <summary>
@@ -64,18 +60,18 @@ namespace EnduranceTheMaze
         {
             //Sets common variables.
             MazeSpike newBlock =
-                new MazeSpike(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+                new MazeSpike(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets specific variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -88,18 +84,18 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Slowly rotates the sprite.
-            sprite.angle += 0.02f;
+            BlockSprite.angle += 0.02f;
 
             //Gets a list of all actor blocks on the spike.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
             //Destroys all actors touching the spike.
             foreach (GameObj item in items)
             {
                 (item as MazeActor).hp = 0;
-                game.playlist.Play(MngrLvl.sndHit, x, y); //Depends: MngrLvl.
+                game.playlist.Play(MngrLvl.sndHit, X, Y); //Depends: MngrLvl.
             }
 
             spriteAtlas.Update(true);
@@ -114,12 +110,12 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display disabled status and info.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Spike";
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

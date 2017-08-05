@@ -43,8 +43,8 @@ namespace EnduranceTheMaze
             if (game.mngrLvl.actor != null)
             {
                 //Attenuates the volume based on distance to sound.
-                int xPos = Math.Abs(x - game.mngrLvl.actor.x);
-                int yPos = Math.Abs(y - game.mngrLvl.actor.y);
+                int xPos = Math.Abs(x - game.mngrLvl.actor.X);
+                int yPos = Math.Abs(y - game.mngrLvl.actor.Y);
 
                 if (xPos + yPos != 0)
                 {

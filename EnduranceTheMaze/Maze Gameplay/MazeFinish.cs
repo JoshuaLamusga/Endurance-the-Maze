@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -22,7 +18,7 @@ namespace EnduranceTheMaze
     public class MazeFinish : GameObj
     {
         //Relevant assets.
-        public static Texture2D texFinish { get; private set; }
+        public static Texture2D TexFinish { get; private set; }
 
         /// <summary>Sets the block location and default values.</summary>
         /// <param name="x">The column number.</param>
@@ -32,11 +28,11 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Finish;
+            BlockType = Type.Finish;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texFinish);
-            sprite.depth = 0.417f;
+            BlockSprite = new Sprite(true, TexFinish);
+            BlockSprite.depth = 0.417f;
         }
 
         /// <summary>
@@ -45,7 +41,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texFinish = Content.Load<Texture2D>("Content/Sprites/Game/sprFinish");
+            TexFinish = Content.Load<Texture2D>("Content/Sprites/Game/sprFinish");
         }
 
         /// <summary>
@@ -54,20 +50,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeFinish newBlock = new MazeFinish(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeFinish newBlock = new MazeFinish(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             return newBlock;
         }
 
@@ -78,13 +74,13 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all actors on the finish object.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
             //The player wins if they have enough goals and touch a finish.
             if (items.Count != 0)
             {
-                if (game.mngrLvl.actorGoals >= game.mngrLvl.opReqGoals)
+                if (game.mngrLvl.ActorGoals >= game.mngrLvl.OpReqGoals)
                 {
                     game.mngrLvl.doWin = true;
                 }
@@ -101,9 +97,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Finish | ";
             }

@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +25,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndLockOpen, sndMoveCrate;
-        public static Texture2D texActor { get; private set; }
+        public static Texture2D TexActor { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -37,7 +36,7 @@ namespace EnduranceTheMaze
 
         //An update timer for character movement.
         private int _countdownStart, _countdown;
-        public bool isTimerZero { get; private set; }
+        public bool IsTimerZero { get; private set; }
 
         /// <summary>Sets the block location and default values.</summary>
         /// <param name="x">The column number.</param>
@@ -47,8 +46,8 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.Actor;
+            IsSolid = true;
+            BlockType = Type.Actor;
 
             //Sets default values for health and key ids.
             hp = 100;
@@ -56,17 +55,17 @@ namespace EnduranceTheMaze
 
             //Sets the timer defaults.
             _countdown = _countdownStart = 8;
-            isTimerZero = false;
+            IsTimerZero = false;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texActor);
-            sprite.depth = 0.1f;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 6, 2, 3);
+            BlockSprite = new Sprite(true, TexActor);
+            BlockSprite.depth = 0.1f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 6, 2, 3);
 
             //Sets the initial position.
-            sprite.rectDest.X = x * 32;
-            sprite.rectDest.Y = y * 32;
+            BlockSprite.rectDest.X = x * 32;
+            BlockSprite.rectDest.Y = y * 32;
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace EnduranceTheMaze
         {
             sndLockOpen = Content.Load<SoundEffect>("Content/Sounds/sndLockOpen");
             sndMoveCrate = Content.Load<SoundEffect>("Content/Sounds/sndMoveCrate");
-            texActor = Content.Load<Texture2D>("Content/Sprites/Game/sprActor");
+            TexActor = Content.Load<Texture2D>("Content/Sprites/Game/sprActor");
         }
 
         /// <summary>
@@ -86,24 +85,24 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeActor newBlock = new MazeActor(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeActor newBlock = new MazeActor(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets specific variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
             newBlock._countdown = _countdown;
             newBlock._countdownStart = _countdownStart;
-            newBlock.isTimerZero = isTimerZero;
+            newBlock.IsTimerZero = IsTimerZero;
             newBlock.hp = hp;
             newBlock.keys = new List<Color>(keys);
 
@@ -118,25 +117,25 @@ namespace EnduranceTheMaze
             #region Updates the sprite.
             //Updates the actor sprite by direction.
             //Depends on the texture frames and orientation.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
                 spriteAtlas.frame = 0;
-                sprite.spriteEffects = SpriteEffects.None;
+                BlockSprite.spriteEffects = SpriteEffects.None;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
                 spriteAtlas.frame = 1;
-                sprite.spriteEffects = SpriteEffects.None;
+                BlockSprite.spriteEffects = SpriteEffects.None;
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
                 spriteAtlas.frame = 0;
-                sprite.spriteEffects = SpriteEffects.FlipHorizontally;
+                BlockSprite.spriteEffects = SpriteEffects.FlipHorizontally;
             }
             else
             {
                 spriteAtlas.frame = 2;
-                sprite.spriteEffects = SpriteEffects.None;
+                BlockSprite.spriteEffects = SpriteEffects.None;
             }
             if (this == game.mngrLvl.actor)
             {
@@ -149,11 +148,11 @@ namespace EnduranceTheMaze
             if (_countdown == 0)
             {
                 _countdown = _countdownStart;
-                isTimerZero = true;
+                IsTimerZero = true;
             }
             else
             {
-                isTimerZero = false;
+                IsTimerZero = false;
             }
             #endregion
 
@@ -173,22 +172,22 @@ namespace EnduranceTheMaze
 
             #region Player movement
             //Captures keyboard commands to move.
-            if (isEnabled && (this == game.mngrLvl.actor ||
+            if (IsEnabled && (this == game.mngrLvl.actor ||
                 game.mngrLvl.opSyncActors))
             {
                 //Represents intent and ability to move.
                 bool doMove = false, canMove = true;
 
                 //Contains previous direction.
-                Dir dirPrev = dir;
+                Dir dirPrev = BlockDir;
 
                 //If dir should be reverted. Almost never set to false.
                 bool doRevertDir = true;
 
                 //If the character hasn't met the step limit.
                 //Prevents keystroke processing when app is inactive.
-                if ((game.mngrLvl.opMaxSteps == 0 ||
-                    game.mngrLvl.lvlSteps < game.mngrLvl.opMaxSteps) &&
+                if ((game.mngrLvl.OpMaxSteps == 0 ||
+                    game.mngrLvl.LvlSteps < game.mngrLvl.OpMaxSteps) &&
                     game.IsActive)
                 {
                     if ((game.KbState.IsKeyDown(Keys.D) &&
@@ -197,7 +196,7 @@ namespace EnduranceTheMaze
                         game.KbStateOld.IsKeyUp(Keys.Right)))
                     {
                         _countdown = _countdownStart;
-                        isTimerZero = true;
+                        IsTimerZero = true;
                     }
                     else if ((game.KbState.IsKeyDown(Keys.S) &&
                         game.KbStateOld.IsKeyUp(Keys.S)) ||
@@ -205,7 +204,7 @@ namespace EnduranceTheMaze
                         game.KbStateOld.IsKeyUp(Keys.Down)))
                     {
                         _countdown = _countdownStart;
-                        isTimerZero = true;
+                        IsTimerZero = true;
                     }
                     else if ((game.KbState.IsKeyDown(Keys.A) &&
                         game.KbStateOld.IsKeyUp(Keys.A)) ||
@@ -213,7 +212,7 @@ namespace EnduranceTheMaze
                         game.KbStateOld.IsKeyUp(Keys.Left)))
                     {
                         _countdown = _countdownStart;
-                        isTimerZero = true;
+                        IsTimerZero = true;
                     }
                     else if ((game.KbState.IsKeyDown(Keys.W) &&
                         game.KbStateOld.IsKeyUp(Keys.W)) ||
@@ -221,35 +220,35 @@ namespace EnduranceTheMaze
                         game.KbStateOld.IsKeyUp(Keys.Up)))
                     {
                         _countdown = _countdownStart;
-                        isTimerZero = true;
+                        IsTimerZero = true;
                     }
 
                     //Updates the player direction based on movement.
                     //Prevents keystroke processing when app is inactive.
-                    if (game.IsActive && isTimerZero)
+                    if (game.IsActive && IsTimerZero)
                     {
                         if (game.KbState.IsKeyDown(Keys.D) ||
                             game.KbState.IsKeyDown(Keys.Right))
                         {
-                            dir = Dir.Right;
+                            BlockDir = Dir.Right;
                             doMove = true;
                         }
                         else if (game.KbState.IsKeyDown(Keys.S) ||
                             game.KbState.IsKeyDown(Keys.Down))
                         {
-                            dir = Dir.Down;
+                            BlockDir = Dir.Down;
                             doMove = true;
                         }
                         else if (game.KbState.IsKeyDown(Keys.A) ||
                             game.KbState.IsKeyDown(Keys.Left))
                         {
-                            dir = Dir.Left;
+                            BlockDir = Dir.Left;
                             doMove = true;
                         }
                         else if (game.KbState.IsKeyDown(Keys.W) ||
                             game.KbState.IsKeyDown(Keys.Up))
                         {
-                            dir = Dir.Up;
+                            BlockDir = Dir.Up;
                             doMove = true;
                         }
                     }
@@ -259,27 +258,27 @@ namespace EnduranceTheMaze
                         //Considers all scenarios where the player can't move.
                         //Gets a list of all blocks at the location to move.
                         List<GameObj> items = game.mngrLvl.items.Where(o =>
-                            o.x == x + Utils.DirVector(dir).X &&
-                            o.y == y + Utils.DirVector(dir).Y &&
-                            o.layer == layer).ToList();
+                            o.X == X + Utils.DirVector(BlockDir).X &&
+                            o.Y == Y + Utils.DirVector(BlockDir).Y &&
+                            o.Layer == Layer).ToList();
 
                         foreach (GameObj item in items)
                         {
                             #region Interaction: MazeBelt.cs
                             //Can't move into opposing belts.
-                            if (item.type == Type.Belt &&
-                                item.isEnabled &&
-                                item.dir == Utils.DirOpp(dir))
+                            if (item.BlockType == Type.Belt &&
+                                item.IsEnabled &&
+                                item.BlockDir == Utils.DirOpp(BlockDir))
                             {
                                 canMove = false;
                             }
                             #endregion
 
                             //Can't move if space is occupied.
-                            if (item.isSolid)
+                            if (item.IsSolid)
                             {
                                 #region Interaction: MazeLock.cs
-                                if (item.type == Type.Lock)
+                                if (item.BlockType == Type.Lock)
                                 {
                                     if (keys.Count == 0)
                                     {
@@ -289,12 +288,12 @@ namespace EnduranceTheMaze
                                     bool isFound = false;
                                     for (int i = keys.Count - 1; i >= 0; i--)
                                     {
-                                        if (keys[i] == item.sprite.color)
+                                        if (keys[i] == item.BlockSprite.color)
                                         {
                                             isFound = true;
                                             game.mngrLvl.RemoveItem(item);
                                             keys.RemoveAt(i);
-                                            game.playlist.Play(sndLockOpen, x, y);
+                                            game.playlist.Play(sndLockOpen, X, Y);
                                             break;
                                         }
                                     }
@@ -308,22 +307,22 @@ namespace EnduranceTheMaze
                                 #endregion
 
                                 #region Interaction: MazeCoinLock.cs
-                                if (item.type == Type.CoinLock)
+                                if (item.BlockType == Type.CoinLock)
                                 {
                                     bool isOpened = false;
 
                                     //Opens if player has enough coins.
-                                    if (game.mngrLvl.actorCoins >= item.custInt1)
+                                    if (game.mngrLvl.ActorCoins >= item.CustInt1)
                                     {
                                         //Subtracts the coins.
-                                        if (item.custInt2 == 1)
+                                        if (item.CustInt2 == 1)
                                         {
-                                            game.mngrLvl.actorCoins -= item.custInt1;
+                                            game.mngrLvl.ActorCoins -= item.CustInt1;
                                         }
 
                                         isOpened = true;
                                         game.mngrLvl.RemoveItem(item);
-                                        game.playlist.Play(sndLockOpen, x, y);
+                                        game.playlist.Play(sndLockOpen, X, Y);
                                         break;
                                     }
 
@@ -336,23 +335,23 @@ namespace EnduranceTheMaze
                                 #endregion
 
                                 #region Interaction: MazeCrate.cs
-                                else if (item.type == Type.Crate)
+                                else if (item.BlockType == Type.Crate)
                                 {
                                     #region Interaction: MazeIce.cs
                                     //If the actor is on ice.
                                     if (game.mngrLvl.items.Any(o =>
-                                        o.type == Type.Ice &&
-                                        o.x == x && o.y == y &&
-                                        o.layer == layer))
+                                        o.BlockType == Type.Ice &&
+                                        o.X == X && o.Y == Y &&
+                                        o.Layer == Layer))
                                     {
                                         //If on ice without solid objects in
                                         //front, moving crates is not allowed.
                                         //This prevents moving crates to the
                                         //side of the actor while they slide.
                                         if (!game.mngrLvl.items.Any(o =>
-                                            o.x == x + Utils.DirVector(dirPrev).X &&
-                                            o.y == y + Utils.DirVector(dirPrev).Y &&
-                                            o.layer == layer && o.isSolid))
+                                            o.X == X + Utils.DirVector(dirPrev).X &&
+                                            o.Y == Y + Utils.DirVector(dirPrev).Y &&
+                                            o.Layer == Layer && o.IsSolid))
                                         {
                                             canMove = false;
                                             continue;
@@ -363,17 +362,17 @@ namespace EnduranceTheMaze
                                     //Gets a list of all solids ahead of the
                                     //crate in the player's direction.
                                     List<GameObj> itemsFront =
-                                        game.mngrLvl.items.Where(o => o.x ==
-                                        item.x + Utils.DirVector(dir).X &&
-                                        o.y == item.y + Utils.DirVector(dir).Y
-                                        && o.layer == layer && o.type !=
+                                        game.mngrLvl.items.Where(o => o.X ==
+                                        item.X + Utils.DirVector(BlockDir).X &&
+                                        o.Y == item.Y + Utils.DirVector(BlockDir).Y
+                                        && o.Layer == Layer && o.BlockType !=
                                         Type.CrateHole).ToList();
 
                                     //Gets a list of all items the crate is on.
                                     List<GameObj> itemsTop =
-                                        game.mngrLvl.items.Where(o => o.x ==
-                                        item.x && o.y == item.y && o.layer ==
-                                        layer && o.isEnabled).ToList();
+                                        game.mngrLvl.items.Where(o => o.X ==
+                                        item.X && o.Y == item.Y && o.Layer ==
+                                        Layer && o.IsEnabled).ToList();
 
                                     //Removes crate from affecting itself.
                                     itemsTop.Remove(item);
@@ -381,31 +380,31 @@ namespace EnduranceTheMaze
                                     #region Interaction: MazeBelt.cs
                                     //Can't move crates into opposing belts.
                                     itemsFront = itemsFront.Where(o =>
-                                        o.isSolid || (o.type == Type.Belt &&
-                                        o.dir == Utils.DirOpp(dir) &&
-                                        o.isEnabled)).ToList();
+                                        o.IsSolid || (o.BlockType == Type.Belt &&
+                                        o.BlockDir == Utils.DirOpp(BlockDir) &&
+                                        o.IsEnabled)).ToList();
 
                                     //Can't move crates from belts.
                                     itemsTop = itemsTop.Where(o =>
-                                        o.isSolid || (o.type == Type.Belt &&
-                                        o.isEnabled && o.dir != dir)).ToList();
+                                        o.IsSolid || (o.BlockType == Type.Belt &&
+                                        o.IsEnabled && o.BlockDir != BlockDir)).ToList();
                                     #endregion
 
                                     #region Interaction: MazeMultiWay.cs
                                     itemsFront = itemsFront.Where(o =>
-                                        !(o.isEnabled &&
-                                        o.type == Type.MultiWay &&
-                                        ((o.custInt1 == 0 && o.dir == dir) ||
-                                        (o.custInt1 != 0 && (o.dir == dir ||
-                                        o.dir == Utils.DirOpp(dir))))))
+                                        !(o.IsEnabled &&
+                                        o.BlockType == Type.MultiWay &&
+                                        ((o.CustInt1 == 0 && o.BlockDir == BlockDir) ||
+                                        (o.CustInt1 != 0 && (o.BlockDir == BlockDir ||
+                                        o.BlockDir == Utils.DirOpp(BlockDir))))))
                                         .ToList();
 
                                     itemsTop = itemsTop.Where(o =>
-                                        !(o.isEnabled &&
-                                        o.type == Type.MultiWay &&
-                                        ((o.custInt1 == 0 && o.dir == dir) ||
-                                        (o.custInt1 != 0 && (o.dir == dir ||
-                                        o.dir == Utils.DirOpp(dir))))))
+                                        !(o.IsEnabled &&
+                                        o.BlockType == Type.MultiWay &&
+                                        ((o.CustInt1 == 0 && o.BlockDir == BlockDir) ||
+                                        (o.CustInt1 != 0 && (o.BlockDir == BlockDir ||
+                                        o.BlockDir == Utils.DirOpp(BlockDir))))))
                                         .ToList();
                                     #endregion
 
@@ -416,15 +415,15 @@ namespace EnduranceTheMaze
                                         #region Interaction: MazeTurretBullet.cs
                                         //Finds all bullets skipped over by moving 32px at a time.
                                         //The +32 at the end accounts for sprite width and height.
-                                        float xMin = Math.Min(item.x * 32, (item.x + Utils.DirVector(item.dir).X) * 32);
-                                        float xMax = Math.Max(item.x * 32, (item.x + Utils.DirVector(item.dir).X) * 32) + 32;
-                                        float yMin = Math.Min(item.y * 32, (item.y + Utils.DirVector(item.dir).Y) * 32);
-                                        float yMax = Math.Max(item.y * 32, (item.y + Utils.DirVector(item.dir).Y) * 32) + 32;
+                                        float xMin = Math.Min(item.X * 32, (item.X + Utils.DirVector(item.BlockDir).X) * 32);
+                                        float xMax = Math.Max(item.X * 32, (item.X + Utils.DirVector(item.BlockDir).X) * 32) + 32;
+                                        float yMin = Math.Min(item.Y * 32, (item.Y + Utils.DirVector(item.BlockDir).Y) * 32);
+                                        float yMax = Math.Max(item.Y * 32, (item.Y + Utils.DirVector(item.BlockDir).Y) * 32) + 32;
                                         List<GameObj> bullets = game.mngrLvl.items.Where(o =>
-                                            o.type == Type.TurretBullet &&
-                                            o.layer == item.layer &&
-                                            o.x >= xMin && o.x <= xMax &&
-                                            o.y >= yMin && o.y <= yMax)
+                                            o.BlockType == Type.TurretBullet &&
+                                            o.Layer == item.Layer &&
+                                            o.X >= xMin && o.X <= xMax &&
+                                            o.Y >= yMin && o.Y <= yMax)
                                             .ToList();
 
                                         for (int i = 0; i < bullets.Count; i++)
@@ -435,11 +434,11 @@ namespace EnduranceTheMaze
 
                                         //Plays the crate-moving sound.
                                         game.playlist.Play
-                                            (sndMoveCrate, x, y);
+                                            (sndMoveCrate, X, Y);
 
-                                        item.dir = dir; //used for ice.
-                                        item.x += (int)Utils.DirVector(dir).X;
-                                        item.y += (int)Utils.DirVector(dir).Y;
+                                        item.BlockDir = BlockDir; //used for ice.
+                                        item.X += (int)Utils.DirVector(BlockDir).X;
+                                        item.Y += (int)Utils.DirVector(BlockDir).Y;
 
                                         //Recalculates sprite (no flicker).
                                         item.Update();
@@ -452,14 +451,14 @@ namespace EnduranceTheMaze
                                 #endregion
 
                                 #region Interaction: MazeMultiWay.cs
-                                else if (item.type == Type.MultiWay)
+                                else if (item.BlockType == Type.MultiWay)
                                 {
-                                    if ((item.custInt1 == 0 &&
-                                        item.dir != dir) ||
-                                        (item.custInt1 != 0 &&
-                                        item.dir != dir &&
-                                        item.dir != Utils.DirOpp(dir)) ||
-                                        (item.isEnabled == false))
+                                    if ((item.CustInt1 == 0 &&
+                                        item.BlockDir != BlockDir) ||
+                                        (item.CustInt1 != 0 &&
+                                        item.BlockDir != BlockDir &&
+                                        item.BlockDir != Utils.DirOpp(BlockDir)) ||
+                                        (item.IsEnabled == false))
                                     {
                                         canMove = false;
                                     }
@@ -474,15 +473,15 @@ namespace EnduranceTheMaze
 
                         //Considers all scenarios where the player can't move.
                         //Gets a list of all blocks at the current location.
-                        items = game.mngrLvl.items.Where(o => o.x == x &&
-                            o.y == y && o.layer == layer && o.isEnabled)
+                        items = game.mngrLvl.items.Where(o => o.X == X &&
+                            o.Y == Y && o.Layer == Layer && o.IsEnabled)
                             .ToList();
 
                         foreach (GameObj item in items)
                         {
                             #region Interaction: MazeBelt.cs
                             //Cannot move while on a belt.
-                            if (item.type == Type.Belt && item.isEnabled)
+                            if (item.BlockType == Type.Belt && item.IsEnabled)
                             {
                                 canMove = false;
                                 doRevertDir = true;
@@ -490,28 +489,28 @@ namespace EnduranceTheMaze
                             #endregion
 
                             #region Interaction: MazeIce.cs
-                            else if (item.type == Type.Ice)
+                            else if (item.BlockType == Type.Ice)
                             {
                                 //Gets a list of blocks in front.
                                 List<GameObj> itemsTemp;
                                 itemsTemp = game.mngrLvl.items.Where(o =>
-                                    o.x == x + Utils.DirVector(dirPrev).X &&
-                                    o.y == y + Utils.DirVector(dirPrev).Y &&
-                                    o.layer == layer).ToList();
+                                    o.X == X + Utils.DirVector(dirPrev).X &&
+                                    o.Y == Y + Utils.DirVector(dirPrev).Y &&
+                                    o.Layer == Layer).ToList();
 
                                 #region Interaction: MazeMultiWay.cs
                                 itemsTemp = itemsTemp.Where(o =>
-                                    !(o.isEnabled && o.type == Type.MultiWay
-                                    && ((o.custInt1 == 0 && o.dir == dirPrev) ||
-                                    (o.custInt1 != 0 && (o.dir == dirPrev ||
-                                    o.dir == Utils.DirOpp(dirPrev)
+                                    !(o.IsEnabled && o.BlockType == Type.MultiWay
+                                    && ((o.CustInt1 == 0 && o.BlockDir == dirPrev) ||
+                                    (o.CustInt1 != 0 && (o.BlockDir == dirPrev ||
+                                    o.BlockDir == Utils.DirOpp(dirPrev)
                                     ))))).ToList();
                                 #endregion
                                 #region Interaction: MazeBelt.cs
                                 //Blocked by solids and enabled belts.
                                 itemsTemp = itemsTemp.Where(o =>
-                                    o.isSolid || (o.type == Type.Belt &&
-                                    o.dir != Utils.DirOpp(dir))).ToList();
+                                    o.IsSolid || (o.BlockType == Type.Belt &&
+                                    o.BlockDir != Utils.DirOpp(BlockDir))).ToList();
                                 #endregion
 
                                 //Can't move unless blocked.
@@ -523,11 +522,11 @@ namespace EnduranceTheMaze
                             #endregion
 
                             #region Interaction: MazeMultiWay.cs
-                            else if (item.type == Type.MultiWay)
+                            else if (item.BlockType == Type.MultiWay)
                             {
-                                if ((item.custInt1 == 0 && item.dir != dir) ||
-                                    (item.custInt1 != 0 && item.dir != dir &&
-                                    item.dir != Utils.DirOpp(dir)))
+                                if ((item.CustInt1 == 0 && item.BlockDir != BlockDir) ||
+                                    (item.CustInt1 != 0 && item.BlockDir != BlockDir &&
+                                    item.BlockDir != Utils.DirOpp(BlockDir)))
                                 {
                                     canMove = false;
                                 }
@@ -542,15 +541,15 @@ namespace EnduranceTheMaze
                         #region Interaction: MazeFilter.cs
                         //Gets a list of all filters the actor is standing on.
                         List<GameObj> items = game.mngrLvl.items.Where(o =>
-                            o.x == x && o.y == y && o.layer == layer &&
-                            o.type == Type.Filter).ToList();
+                            o.X == X && o.Y == Y && o.Layer == Layer &&
+                            o.BlockType == Type.Filter).ToList();
                         
                         //Decrements each filter's countdown.
                         foreach (GameObj item in items)
                         {
-                            if (item.isEnabled && item.custInt1 > 0)
+                            if (item.IsEnabled && item.CustInt1 > 0)
                             {
-                                item.custInt1--;
+                                item.CustInt1--;
                             }
                         }
                         #endregion
@@ -558,22 +557,22 @@ namespace EnduranceTheMaze
                         #region Interaction: MazeTurretBullet.cs
                         //Finds all bullets skipped over by moving 32px at a time.
                         //The +32 at the end accounts for sprite width and height.
-                        float xMin = Math.Min(x * 32, (x + Utils.DirVector(dir).X) * 32);
-                        float xMax = Math.Max(x * 32, (x + Utils.DirVector(dir).X) * 32) + 32;
-                        float yMin = Math.Min(y * 32, (y + Utils.DirVector(dir).Y) * 32);
-                        float yMax = Math.Max(y * 32, (y + Utils.DirVector(dir).Y) * 32) + 32;
+                        float xMin = Math.Min(X * 32, (X + Utils.DirVector(BlockDir).X) * 32);
+                        float xMax = Math.Max(X * 32, (X + Utils.DirVector(BlockDir).X) * 32) + 32;
+                        float yMin = Math.Min(Y * 32, (Y + Utils.DirVector(BlockDir).Y) * 32);
+                        float yMax = Math.Max(Y * 32, (Y + Utils.DirVector(BlockDir).Y) * 32) + 32;
                         List<GameObj> bullets = game.mngrLvl.items.Where(o =>
-                            o.type == Type.TurretBullet &&
-                            o.layer == layer &&
-                            o.x >= xMin && o.x <= xMax &&
-                            o.y >= yMin && o.y <= yMax)
+                            o.BlockType == Type.TurretBullet &&
+                            o.Layer == Layer &&
+                            o.X >= xMin && o.X <= xMax &&
+                            o.Y >= yMin && o.Y <= yMax)
                             .ToList();
 
                         List<GameObj> thisActor = new List<GameObj>();
                         thisActor.Add(this);
 
                         hp -= 25 * bullets.Count;
-                        game.playlist.Play(MngrLvl.sndHit, x, y);
+                        game.playlist.Play(MngrLvl.sndHit, X, Y);
 
                         for (int i = 0; i < bullets.Count; i++)
                         {
@@ -581,18 +580,18 @@ namespace EnduranceTheMaze
                         }
                         #endregion
 
-                        x += (int)Utils.DirVector(dir).X;
-                        y += (int)Utils.DirVector(dir).Y;
+                        X += (int)Utils.DirVector(BlockDir).X;
+                        Y += (int)Utils.DirVector(BlockDir).Y;
 
                         //Increments the step counter if applicable.
                         if (this == game.mngrLvl.actor)
                         {
-                            game.mngrLvl.lvlSteps++;
+                            game.mngrLvl.LvlSteps++;
                         }
                     }
                     else if (doRevertDir)
                     {
-                        dir = dirPrev;
+                        BlockDir = dirPrev;
                     }
                 }
             }
@@ -604,9 +603,9 @@ namespace EnduranceTheMaze
                 //If the player is clicked.
                 if (game.MsState.LeftButton == ButtonState.Pressed &&
                     game.MsStateOld.LeftButton == ButtonState.Released &&
-                    Sprite.isIntersecting(sprite, new SmoothRect
+                    Sprite.IsIntersecting(BlockSprite, new SmoothRect
                     (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                    layer == game.mngrLvl.actor.layer)
+                    Layer == game.mngrLvl.actor.Layer)
                 {
                     if (this != game.mngrLvl.actor)
                     {
@@ -631,9 +630,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display keys / disabled status on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "actor ";
 
@@ -645,13 +644,13 @@ namespace EnduranceTheMaze
                     //Draws a key for each collected key.
                     for (int i = 0; i < keys.Count; i++)
                     {
-                        game.GameSpriteBatch.Draw(MazeKey.texKey,
-                            new Rectangle(x*32 + i*16, y*32 - 16, 16, 16),
+                        game.GameSpriteBatch.Draw(MazeKey.TexKey,
+                            new Rectangle(X*32 + i*16, Y*32 - 16, 16, 16),
                             new Rectangle(0, 0, 32, 32), keys[i]);
                     }
                     #endregion
                 }
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled) ";
                 }

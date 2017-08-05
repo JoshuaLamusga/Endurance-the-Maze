@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -23,7 +19,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndCrateHole;
-        public static Texture2D texCrateHole { get; private set; }
+        public static Texture2D TexCrateHole { get; private set; }
 
         //Sprite information.
         private SpriteAtlas spriteAtlas;
@@ -36,13 +32,13 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.CrateHole;
+            IsSolid = true;
+            BlockType = Type.CrateHole;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texCrateHole);
-            sprite.depth = 0.403f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 2, 1, 2);
+            BlockSprite = new Sprite(true, TexCrateHole);
+            BlockSprite.depth = 0.403f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
         }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndCrateHole = Content.Load<SoundEffect>("Content/Sounds/sndCrateHole");
-            texCrateHole = Content.Load<Texture2D>("Content/Sprites/Game/sprCrateHole");
+            TexCrateHole = Content.Load<Texture2D>("Content/Sprites/Game/sprCrateHole");
         }
 
         /// <summary>
@@ -61,18 +57,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeCrateHole newBlock = new MazeCrateHole(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeCrateHole newBlock = new MazeCrateHole(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets custom variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -86,21 +82,21 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //If a crate is on the hole, fills it and deletes the crate.
-            if (isSolid)
+            if (IsSolid)
             {
                 //Gets a list of all crates on the hole.
                 List<GameObj> items = game.mngrLvl.items.Where(o =>
-                    o.x == x && o.y == y && o.layer == layer &&
-                    o.type == Type.Crate).ToList();
+                    o.X == X && o.Y == Y && o.Layer == Layer &&
+                    o.BlockType == Type.Crate).ToList();
 
                 //Removes the first crate and fills the hole.
                 if (items.Count != 0)
                 {
                     game.mngrLvl.RemoveItem(items[0]);
-                    game.playlist.Play(sndCrateHole, x, y);
+                    game.playlist.Play(sndCrateHole, X, Y);
 
                     spriteAtlas.frame = 1;
-                    isSolid = false;
+                    IsSolid = false;
                 }
             }
 
@@ -116,9 +112,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Hole | ";
             }

@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -29,7 +25,7 @@ namespace EnduranceTheMaze
     public class MazeGate : GameObj
     {
         //Relevant assets.
-        public static Texture2D texGate { get; private set; }
+        public static Texture2D TexGate { get; private set; }
 
         //Sprite information.
         private SpriteAtlas spriteAtlas;
@@ -45,12 +41,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Gate;
+            BlockType = Type.Gate;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texGate);
-            sprite.depth = 0.102f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 2, 1, 2);
+            BlockSprite = new Sprite(true, TexGate);
+            BlockSprite.depth = 0.102f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
         }
 
         /// <summary>
@@ -59,7 +55,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texGate = Content.Load<Texture2D>("Content/Sprites/Game/sprGate");
+            TexGate = Content.Load<Texture2D>("Content/Sprites/Game/sprGate");
         }
 
         /// <summary>
@@ -68,18 +64,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeGate newBlock = new MazeGate(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeGate newBlock = new MazeGate(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets custom variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -94,74 +90,74 @@ namespace EnduranceTheMaze
             if (!updateCalled)
             {
                 //Starts as solid if chosen.
-                if (custInt2 == 1)
+                if (CustInt2 == 1)
                 {
-                    isSolid = true;
+                    IsSolid = true;
                 }
 
                 updateCalled = true;
             }
 
             //Determines the old solidity.
-            bool wasSolid = isSolid;
+            bool wasSolid = IsSolid;
 
             //Handles activation.
-            if (isEnabled)
+            if (IsEnabled)
             {
-                if (isActivated)
+                if (IsActivated)
                 {
                     //If the gate should toggle solidity.
-                    if (actionType == 5)
+                    if (ActionType == 5)
                     {
-                        isSolid = !isSolid;
+                        IsSolid = !IsSolid;
 
-                        isActivated = false;
-                        game.playlist.Play(sndActivated, x, y);
+                        IsActivated = false;
+                        game.playlist.Play(sndActivated, X, Y);
                     }
                     //If the gate should be solid while active.
-                    else if (actionType == 6)
+                    else if (ActionType == 6)
                     {
-                        isSolid = true;
+                        IsSolid = true;
                     }
                     //If the gate should be non-solid while active.
-                    else if (actionType == 7)
+                    else if (ActionType == 7)
                     {
-                        isSolid = false;
+                        IsSolid = false;
                     }
                 }
                 else
                 {
-                    if (actionType == 6)
+                    if (ActionType == 6)
                     {
-                        isSolid = false;
+                        IsSolid = false;
                     }
-                    else if (actionType == 7)
+                    else if (ActionType == 7)
                     {
-                        isSolid = true;
+                        IsSolid = true;
                     }
                 }
 
                 //If the solidity changed.
-                if (wasSolid != isSolid)
+                if (wasSolid != IsSolid)
                 {
                     //All solids at the gate position, except itself.
                     List<GameObj> trappedActors = new List<GameObj>();
                     List<GameObj> items = game.mngrLvl.items.Where(o =>
-                        o.x == x && o.y == y && o.layer == layer && o.isSolid)
+                        o.X == X && o.Y == Y && o.Layer == Layer && o.IsSolid)
                         .ToList();
                     items.Remove(this);
 
                     //Solids prevent gate closure, so if it can close on actors,
                     //the actors must be removed from the list.
-                    if (custInt1 == 1)
+                    if (CustInt1 == 1)
                     {
                         trappedActors = items.Where(o =>
-                            o.type == Type.Actor).ToList();
+                            o.BlockType == Type.Actor).ToList();
                     }
                     //The gate becomes open if it can't close on solids.
                     if (items.Count - trappedActors.Count != 0)
                     {
-                        isSolid = false;
+                        IsSolid = false;
                     }
 
                     //Actors lose if trapped by a gate.
@@ -175,7 +171,7 @@ namespace EnduranceTheMaze
                 }
 
                 //Determines the sprite via solidity.
-                spriteAtlas.frame = (isSolid) ? 1 : 0;
+                spriteAtlas.frame = (IsSolid) ? 1 : 0;
             }
 
             spriteAtlas.Update(true);
@@ -190,9 +186,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Gate | ";
             }

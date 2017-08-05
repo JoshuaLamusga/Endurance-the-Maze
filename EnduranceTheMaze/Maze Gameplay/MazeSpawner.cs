@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -24,7 +20,7 @@ namespace EnduranceTheMaze
     public class MazeSpawner : GameObj
     {
         //Relevant assets.
-        public static Texture2D texSpawner { get; private set; }
+        public static Texture2D TexSpawner { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;     
@@ -37,14 +33,14 @@ namespace EnduranceTheMaze
             base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.Spawner;
+            IsSolid = true;
+            BlockType = Type.Spawner;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texSpawner);
-            sprite.depth = 0.402f;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 8, 2, 4);
+            BlockSprite = new Sprite(true, TexSpawner);
+            BlockSprite.depth = 0.402f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 8, 2, 4);
         }
 
         /// <summary>
@@ -53,7 +49,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texSpawner = Content.Load<Texture2D>("Content/Sprites/Game/sprSpawner");
+            TexSpawner = Content.Load<Texture2D>("Content/Sprites/Game/sprSpawner");
         }
 
         /// <summary>
@@ -63,18 +59,18 @@ namespace EnduranceTheMaze
         {
             //Sets common variables.
             MazeSpawner newBlock =
-                new MazeSpawner(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+                new MazeSpawner(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets specific variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -87,38 +83,38 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Performs activation behaviors.
-            if (isEnabled && isActivated)
+            if (IsEnabled && IsActivated)
             {
-                if (actionType > 4)
+                if (ActionType > 4)
                 {
                     //Deactivates the item and plays a sound.
-                    isActivated = false;
+                    IsActivated = false;
 
                     //Gets a list of solid objects in the way.
                     List<GameObj> items = game.mngrLvl.items.Where(o =>
-                        o.x == x + (int)Utils.DirVector(dir).X &&
-                        o.y == y + (int)Utils.DirVector(dir).Y &&
-                        o.layer == layer && o.isSolid).ToList();
+                        o.X == X + (int)Utils.DirVector(BlockDir).X &&
+                        o.Y == Y + (int)Utils.DirVector(BlockDir).Y &&
+                        o.Layer == Layer && o.IsSolid).ToList();
 
                     #region Interaction: MazeMultiWay.cs
                 items = items.Where(o =>
-                    !(o.isEnabled && o.type == Type.MultiWay &&
-                    ((o.custInt1 == 0 && o.dir == dir) ||
-                    (o.custInt1 != 0 && (o.dir == dir ||
-                    o.dir == Utils.DirOpp(dir)))))).ToList();
+                    !(o.IsEnabled && o.BlockType == Type.MultiWay &&
+                    ((o.CustInt1 == 0 && o.BlockDir == BlockDir) ||
+                    (o.CustInt1 != 0 && (o.BlockDir == BlockDir ||
+                    o.BlockDir == Utils.DirOpp(BlockDir)))))).ToList();
                 #endregion
 
                     //Creates an item if there are no solid objects.
                     if (items.Count == 0)
                     {
                         //Plays a sound when an object is spawned.
-                        game.playlist.Play(sndActivated, x, y);
+                        game.playlist.Play(sndActivated, X, Y);
 
                         //Creates different blocks based on action type.
                         game.mngrLvl.AddItem(Utils.BlockFromType(game,
-                            (Type)(actionType - 5),
-                            x + (int)Utils.DirVector(dir).X,
-                            y + (int)Utils.DirVector(dir).Y, layer));
+                            (Type)(ActionType - 5),
+                            X + (int)Utils.DirVector(BlockDir).X,
+                            Y + (int)Utils.DirVector(BlockDir).Y, Layer));
                     
                     }
                 }
@@ -127,15 +123,15 @@ namespace EnduranceTheMaze
             #region Updates the sprite.
             //Updates the actor sprite by direction.
             //Depends on the texture frames and orientation.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
                 spriteAtlas.frame = 0;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
                 spriteAtlas.frame = 1;
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
                 spriteAtlas.frame = 2;
             }
@@ -143,7 +139,7 @@ namespace EnduranceTheMaze
             {
                 spriteAtlas.frame = 3;
             }
-            if (!isEnabled)
+            if (!IsEnabled)
             {
                 spriteAtlas.frame += 4;
             }
@@ -161,13 +157,13 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display disabled status and info.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Spawner";
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

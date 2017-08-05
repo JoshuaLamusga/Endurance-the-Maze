@@ -10,7 +10,7 @@ namespace EnduranceTheMaze
     /// <summary>Contains useful tools.</summary>
     public static class Utils
     {
-        public static Random rng { get; private set; }
+        public static Random Rng { get; private set; }
         public static Game game;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace EnduranceTheMaze
         /// </summary>
         static Utils()
         {
-            rng = new Random();
+            Rng = new Random();
         }
 
         /// <summary>

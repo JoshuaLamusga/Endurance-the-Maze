@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -24,7 +18,7 @@ namespace EnduranceTheMaze
     public class MazeIce : GameObj
     {
         //Relevant assets.
-        public static Texture2D texIce { get; private set; }
+        public static Texture2D TexIce { get; private set; }
 
         /// <summary>Sets the block location and default values.</summary>
         /// <param name="x">The column number.</param>
@@ -34,11 +28,11 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Ice;
+            BlockType = Type.Ice;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texIce);
-            sprite.depth = 0.5f;
+            BlockSprite = new Sprite(true, TexIce);
+            BlockSprite.depth = 0.5f;
         }
 
         /// <summary>
@@ -47,7 +41,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texIce = Content.Load<Texture2D>("Content/Sprites/Game/sprIce");
+            TexIce = Content.Load<Texture2D>("Content/Sprites/Game/sprIce");
         }
 
         /// <summary>
@@ -56,17 +50,17 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeIce newBlock = new MazeIce(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeIce newBlock = new MazeIce(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
             return newBlock;
         }
 
@@ -78,9 +72,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Ice | ";
             }

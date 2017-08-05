@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace EnduranceTheMaze
 {
@@ -24,7 +19,7 @@ namespace EnduranceTheMaze
     public class MazeTurretBullet : GameObj
     {
         //Relevant assets.
-        public static Texture2D texTurretBullet { get; private set; }
+        public static Texture2D TexTurretBullet { get; private set; }
 
         //Stores all mirrors bounced off of so it only bounces once.
         public List<GameObj> mirrors;
@@ -37,15 +32,15 @@ namespace EnduranceTheMaze
             base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.TurretBullet;
+            BlockType = Type.TurretBullet;
             isSynchronized = false;
             mirrors = new List<GameObj>();
 
             //Sets sprite information.
-            sprite = new Sprite(true, texTurretBullet);
-            sprite.depth = 0.2f;
-            sprite.drawBehavior = SpriteDraw.all;
-            sprite.CenterOrigin();
+            BlockSprite = new Sprite(true, TexTurretBullet);
+            BlockSprite.depth = 0.2f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            BlockSprite.CenterOrigin();
         }
 
         /// <summary>
@@ -54,7 +49,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texTurretBullet = Content.Load<Texture2D>("Content/Sprites/Game/sprTurretBullet");
+            TexTurretBullet = Content.Load<Texture2D>("Content/Sprites/Game/sprTurretBullet");
         }
 
         /// <summary>
@@ -64,17 +59,17 @@ namespace EnduranceTheMaze
         {
             //Sets common variables.
             MazeTurretBullet newBlock =
-                new MazeTurretBullet(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+                new MazeTurretBullet(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
             newBlock.mirrors = mirrors;
 
             return newBlock;
@@ -96,13 +91,13 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display disabled status and info.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Turret Bullet";
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

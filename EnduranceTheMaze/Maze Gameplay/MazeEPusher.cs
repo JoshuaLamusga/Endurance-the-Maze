@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +23,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndActivatePush;
-        public static Texture2D texEPusher { get; private set; }
+        public static Texture2D TexEPusher { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -42,17 +39,17 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.EPusher;
-            isSolid = true;
+            BlockType = Type.EPusher;
+            IsSolid = true;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texEPusher);
-            sprite.depth = 0.415f;
-            sprite.drawBehavior = SpriteDraw.all;            
-            spriteAtlas = new SpriteAtlas(sprite, 64, 32, 3, 1, 3);
-            sprite.originOffset = true;
-            sprite.origin.X = 16;
-            sprite.origin.Y = 16;
+            BlockSprite = new Sprite(true, TexEPusher);
+            BlockSprite.depth = 0.415f;
+            BlockSprite.drawBehavior = SpriteDraw.all;            
+            spriteAtlas = new SpriteAtlas(BlockSprite, 64, 32, 3, 1, 3);
+            BlockSprite.originOffset = true;
+            BlockSprite.origin.X = 16;
+            BlockSprite.origin.Y = 16;
 
             //Sets timer information.
             pressTimer = pressTimerMax = 5;
@@ -65,7 +62,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndActivatePush = Content.Load<SoundEffect>("Content/Sounds/sndActivatePush");
-            texEPusher = Content.Load<Texture2D>("Content/Sprites/Game/sprEPusher");
+            TexEPusher = Content.Load<Texture2D>("Content/Sprites/Game/sprEPusher");
         }
 
         /// <summary>
@@ -74,20 +71,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeEPusher newBlock = new MazeEPusher(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;            
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeEPusher newBlock = new MazeEPusher(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;            
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, true);
             newBlock.pressTimer = pressTimer;
             newBlock.pressTimerMax = pressTimerMax;
@@ -107,7 +104,7 @@ namespace EnduranceTheMaze
                 {
                     spriteAtlas.frame = 0;
                     pressTimer = pressTimerMax;
-                    if (!isEnabled)
+                    if (!IsEnabled)
                     {
                         spriteAtlas.frame = 2;
                     }
@@ -115,30 +112,30 @@ namespace EnduranceTheMaze
             }
 
             #region Adjusts sprite.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
-                sprite.angle = 0;
+                BlockSprite.angle = 0;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
-                sprite.angle = (float)(Math.PI / 2);
+                BlockSprite.angle = (float)(Math.PI / 2);
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
-                sprite.angle = (float)(Math.PI);
+                BlockSprite.angle = (float)(Math.PI);
             }
             else
             {
-                sprite.angle = (float)(-Math.PI / 2);
+                BlockSprite.angle = (float)(-Math.PI / 2);
             }
 
-            if (isActivated && actionType > 4)
+            if (IsActivated && ActionType > 4)
             {
                 spriteAtlas.frame = 1;
             }
-            if (isEnabled)
+            if (IsEnabled)
             {
-                if (!isActivated && pressTimer == 0)
+                if (!IsActivated && pressTimer == 0)
                 {
                     spriteAtlas.frame = 0;
                 }
@@ -149,24 +146,24 @@ namespace EnduranceTheMaze
             }
             #endregion
 
-            if (isActivated)
+            if (IsActivated)
             {
-                if (actionType == 5)
+                if (ActionType == 5)
                 {
-                    isActivated = false;
+                    IsActivated = false;
 
-                    if (isEnabled)
+                    if (IsEnabled)
                     {
                         //Gets a list of all solid blocks to be pushed and all
                         //solid blocks that may prevent movement.
                         List<GameObj> items = game.mngrLvl.items.Where(o =>
-                            o.x == x + (int)Utils.DirVector(dir).X &&
-                            o.y == y + (int)Utils.DirVector(dir).Y &&
-                            o.layer == layer && o.isSolid).ToList();
+                            o.X == X + (int)Utils.DirVector(BlockDir).X &&
+                            o.Y == Y + (int)Utils.DirVector(BlockDir).Y &&
+                            o.Layer == Layer && o.IsSolid).ToList();
                         List<GameObj> items2 = game.mngrLvl.items.Where(o =>
-                            o.x == x + (int)Utils.DirVector(dir).X * 2 &&
-                            o.y == y + (int)Utils.DirVector(dir).Y * 2 &&
-                            o.layer == layer && o.isSolid).ToList();
+                            o.X == X + (int)Utils.DirVector(BlockDir).X * 2 &&
+                            o.Y == Y + (int)Utils.DirVector(BlockDir).Y * 2 &&
+                            o.Layer == Layer && o.IsSolid).ToList();
 
                         //Solid blocks in the destination prevent pushing.
                         if (items2.Count != 0)
@@ -175,12 +172,12 @@ namespace EnduranceTheMaze
                         }
                         else
                         {
-                            game.playlist.Play(sndActivatePush, x, y);
+                            game.playlist.Play(sndActivatePush, X, Y);
 
                             foreach (GameObj item in items)
                             {
-                                item.x += (int)Utils.DirVector(dir).X;
-                                item.y += (int)Utils.DirVector(dir).Y;
+                                item.X += (int)Utils.DirVector(BlockDir).X;
+                                item.Y += (int)Utils.DirVector(BlockDir).Y;
                             }
                         }
                     }
@@ -199,9 +196,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "E-pusher | ";
             }

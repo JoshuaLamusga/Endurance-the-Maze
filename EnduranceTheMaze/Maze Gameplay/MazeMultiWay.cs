@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace EnduranceTheMaze
 {
@@ -24,7 +19,7 @@ namespace EnduranceTheMaze
     public class MazeMultiWay : GameObj
     {
         //Relevant assets.
-        public static Texture2D texMultiWay { get; private set; }
+        public static Texture2D TexMultiWay { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -37,15 +32,15 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.MultiWay;
+            IsSolid = true;
+            BlockType = Type.MultiWay;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texMultiWay);
-            sprite.depth = 0.408f;
-            sprite.originOffset = true;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 4, 1, 4);
+            BlockSprite = new Sprite(true, TexMultiWay);
+            BlockSprite.depth = 0.408f;
+            BlockSprite.originOffset = true;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 4, 1, 4);
             spriteAtlas.CenterOrigin();
         }
 
@@ -55,7 +50,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texMultiWay = Content.Load<Texture2D>("Content/Sprites/Game/sprMultiWay");
+            TexMultiWay = Content.Load<Texture2D>("Content/Sprites/Game/sprMultiWay");
         }
 
         /// <summary>
@@ -64,20 +59,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeMultiWay newBlock = new MazeMultiWay(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeMultiWay newBlock = new MazeMultiWay(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets custom variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
 
             return newBlock;
@@ -90,26 +85,26 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //Updates the sprite by direction.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
-                sprite.angle = 0;
+                BlockSprite.angle = 0;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
-                sprite.angle = (float)(Math.PI / 2);
+                BlockSprite.angle = (float)(Math.PI / 2);
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
-                sprite.angle = (float)(Math.PI);
+                BlockSprite.angle = (float)(Math.PI);
             }
             else
             {
-                sprite.angle = (float)(-Math.PI / 2);
+                BlockSprite.angle = (float)(-Math.PI / 2);
             }
 
             //Determines the frame used.
             //Dependent on frame order.
-            if (custInt1 == 0)
+            if (CustInt1 == 0)
             {
                 spriteAtlas.frame = 0;
             }
@@ -117,7 +112,7 @@ namespace EnduranceTheMaze
             {
                 spriteAtlas.frame = 2;
             }
-            if (!isEnabled)
+            if (!IsEnabled)
             {
                 spriteAtlas.frame += 1;
             }
@@ -134,11 +129,11 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
-                if (custInt1 == 0)
+                if (CustInt1 == 0)
                 {
                     game.mngrLvl.tooltip += "One-way | ";
                 }

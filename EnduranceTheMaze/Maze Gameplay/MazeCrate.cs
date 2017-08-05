@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace EnduranceTheMaze
 {
@@ -26,7 +20,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndBreakCrate;
-        public static Texture2D texCrate { get; private set; }
+        public static Texture2D TexCrate { get; private set; }
 
         /// <summary>Sets the block location and default values.</summary>
         /// <param name="x">The column number.</param>
@@ -36,16 +30,16 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.Crate;
+            IsSolid = true;
+            BlockType = Type.Crate;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texCrate);
-            sprite.depth = 0.3f;
-            sprite.rectSrc = new SmoothRect(0, 0, 32, 32);
-            sprite.rectDest.Width = 32;
-            sprite.rectDest.Height = 32;
-            sprite.drawBehavior = SpriteDraw.basicAnimated;
+            BlockSprite = new Sprite(true, TexCrate);
+            BlockSprite.depth = 0.3f;
+            BlockSprite.rectSrc = new SmoothRect(0, 0, 32, 32);
+            BlockSprite.rectDest.Width = 32;
+            BlockSprite.rectDest.Height = 32;
+            BlockSprite.drawBehavior = SpriteDraw.basicAnimated;
         }
 
         /// <summary>
@@ -54,7 +48,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texCrate = Content.Load<Texture2D>("Content/Sprites/Game/sprCrate");
+            TexCrate = Content.Load<Texture2D>("Content/Sprites/Game/sprCrate");
             sndBreakCrate = Content.Load<SoundEffect>("Content/Sounds/sndBreakCrate");
         }
 
@@ -64,17 +58,17 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeCrate newBlock = new MazeCrate(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeCrate newBlock = new MazeCrate(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
             return newBlock;
         }
 
@@ -84,20 +78,20 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             //If the crate breaks.
-            if (isActivated && actionType == 5)
+            if (IsActivated && ActionType == 5)
             {
                 //Deactivates and plays the crate breaking sound.
-                isActivated = false;
-                game.playlist.Play(sndBreakCrate, x, y);
+                IsActivated = false;
+                game.playlist.Play(sndBreakCrate, X, Y);
 
                 //Removes the crate, adds a broken crate picture, and adds
                 //the contained item, if any.
                 game.mngrLvl.RemoveItem(this);
-                game.mngrLvl.AddItem(new MazeCrateBroken(game, x, y, layer));
-                if (custInt1 != 0)
+                game.mngrLvl.AddItem(new MazeCrateBroken(game, X, Y, Layer));
+                if (CustInt1 != 0)
                 {
                     game.mngrLvl.AddItem(Utils.BlockFromType
-                            (game, (Type)(custInt1 - 1), x, y, layer));
+                            (game, (Type)(CustInt1 - 1), X, Y, Layer));
                 }
             }
 
@@ -112,9 +106,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Crate | ";
             }

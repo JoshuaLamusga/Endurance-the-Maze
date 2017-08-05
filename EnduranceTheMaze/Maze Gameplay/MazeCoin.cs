@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -23,7 +19,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndCollectCoin;
-        public static Texture2D texCoin { get; private set; }
+        public static Texture2D TexCoin { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -36,12 +32,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Coin;
+            BlockType = Type.Coin;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texCoin);
-            sprite.depth = 0.205f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 19, 2, 10);
+            BlockSprite = new Sprite(true, TexCoin);
+            BlockSprite.depth = 0.205f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
             spriteAtlas.frameSpeed = 0.2f;
         }
 
@@ -52,7 +48,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndCollectCoin = Content.Load<SoundEffect>("Content/Sounds/sndCollectCoin");
-            texCoin = Content.Load<Texture2D>("Content/Sprites/Game/sprCoin");
+            TexCoin = Content.Load<Texture2D>("Content/Sprites/Game/sprCoin");
         }
 
         /// <summary>
@@ -61,20 +57,20 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeCoin newBlock = new MazeCoin(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeCoin newBlock = new MazeCoin(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
 
             //Sets specific variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
             return newBlock;
         }
@@ -86,15 +82,15 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all actors on the coin object.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
             //If there is at least one actor touching the coin.
             if (items.Count != 0)
             {
-                game.mngrLvl.actorCoins++;
+                game.mngrLvl.ActorCoins++;
                 game.mngrLvl.RemoveItem(this);
-                game.playlist.Play(sndCollectCoin, x, y);
+                game.playlist.Play(sndCollectCoin, X, Y);
             }
 
             spriteAtlas.Update(true);
@@ -109,9 +105,9 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Coin | ";
             }

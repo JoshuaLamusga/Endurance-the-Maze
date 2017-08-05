@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -21,7 +15,7 @@ namespace EnduranceTheMaze
     public class MazeFloor : GameObj
     {
         //Relevant assets.
-        public static Texture2D texFloor { get; private set; }
+        public static Texture2D TexFloor { get; private set; }
 
         /// <summary>Sets the block location and default values.</summary>
         /// <param name="x">The column number.</param>
@@ -31,11 +25,11 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Floor;
+            BlockType = Type.Floor;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texFloor);
-            sprite.depth = 0.6f;
+            BlockSprite = new Sprite(true, TexFloor);
+            BlockSprite.depth = 0.6f;
         }
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texFloor = Content.Load<Texture2D>("Content/Sprites/Game/sprFloor");
+            TexFloor = Content.Load<Texture2D>("Content/Sprites/Game/sprFloor");
         }
 
         /// <summary>
@@ -53,17 +47,17 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeFloor newBlock = new MazeFloor(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
+            MazeFloor newBlock = new MazeFloor(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
             return newBlock;
         }
     }

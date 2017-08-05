@@ -1,17 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using System.Windows.Forms;
 using System.IO;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
+using System.Linq;
+using System.Windows.Forms;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace EnduranceTheMaze
 {
@@ -47,7 +41,7 @@ namespace EnduranceTheMaze
         public List<ImgBlock> items; //All items in the level.
 
         //Contains the camera position and zoom.
-        public Matrix camera { get; private set; }
+        public Matrix Camera { get; private set; }
         public int camX, camY, camLayer;
         private float camZoom;
 
@@ -88,7 +82,7 @@ namespace EnduranceTheMaze
             camZoom = 1;
 
             //Updates the camera position.
-            camera = Matrix.CreateTranslation(new Vector3(-camX, -camY, 0)) *
+            Camera = Matrix.CreateTranslation(new Vector3(-camX, -camY, 0)) *
                 Matrix.CreateScale(new Vector3(camZoom, camZoom, 1)) *
                 Matrix.CreateTranslation(
                 new Vector3(game.GetScreenSize().X * 0.5f,
@@ -117,36 +111,36 @@ namespace EnduranceTheMaze
         /// </summary>
         private void SetDefaults(ImgBlock block)
         {
-            switch (block.type)
+            switch (block.BlockType)
             {
                 case Type.Click:
                 case Type.Panel:
-                    block.actionIndex2 = 1;
-                    block.actionType = 5;
+                    block.ActionIndex2 = 1;
+                    block.ActionType = 5;
                     break;
                 case Type.EAuto:
-                    block.actionIndex2 = 1;
-                    block.actionType = 5;
-                    block.custInt1 = 10;
+                    block.ActionIndex2 = 1;
+                    block.ActionType = 5;
+                    block.CustInt1 = 10;
                     break;
                 case Type.ELight:
-                    block.actionType = 5;
+                    block.ActionType = 5;
                     break;
                 case Type.EPusher:
-                    block.actionType = 5;
+                    block.ActionType = 5;
                     break;
                 case Type.Gate:
-                    block.actionType = 5;
-                    block.custInt2 = 1;
+                    block.ActionType = 5;
+                    block.CustInt2 = 1;
                     break;
                 case Type.Rotate:
-                    block.actionType = 5;
-                    block.custInt1 = 2;
+                    block.ActionType = 5;
+                    block.CustInt1 = 2;
                     break;
                 case Type.Turret:
-                    block.actionType = 5;
-                    block.custInt1 = 10;
-                    block.custInt2 = 4;
+                    block.ActionType = 5;
+                    block.CustInt1 = 10;
+                    block.CustInt2 = 4;
                     break;
             }
         }
@@ -162,7 +156,7 @@ namespace EnduranceTheMaze
             PropButton.LoadContent(game.Content);
 
             //Sets up the bottom toolbar.
-            sprToolbar = new Sprite(true, MngrLvl.texPixel);
+            sprToolbar = new Sprite(true, MngrLvl.TexPixel);
             sprToolbar.color = Color.Gray;
             sprToolbar.alpha = 0.5f;
             sprToolbar.rectDest = new SmoothRect(new Vector2(
@@ -172,52 +166,52 @@ namespace EnduranceTheMaze
             //Sets up toolbar buttons.
             //Level settings.
             bttnGameDelay = new PropButton(game,
-                new Sprite(true, PropButton.texOpGameDelay),
+                new Sprite(true, PropButton.TexOpGameDelay),
                 new Vector2(32, game.GetScreenSize().Y - 32));
             bttnLvlLink = new PropButton(game,
-                new Sprite(true, PropButton.texOpLvlLink),
+                new Sprite(true, PropButton.TexOpLvlLink),
                 new Vector2(66, game.GetScreenSize().Y - 32));
             bttnMaxSteps = new PropButton(game,
-                new Sprite(true, PropButton.texOpMaxSteps),
+                new Sprite(true, PropButton.TexOpMaxSteps),
                 new Vector2(100, game.GetScreenSize().Y - 32));
             bttnMinGoals = new PropButton(game,
-                new Sprite(true, PropButton.texOpMinGoals),
+                new Sprite(true, PropButton.TexOpMinGoals),
                 new Vector2(134, game.GetScreenSize().Y - 32));
             bttnSyncActors = new PropButton(game,
-                new Sprite(true, PropButton.texOpSyncActors),
+                new Sprite(true, PropButton.TexOpSyncActors),
                 new Vector2(168, game.GetScreenSize().Y - 32));
             bttnSyncDeath = new PropButton(game,
-                new Sprite(true, PropButton.texOpSyncDeath),
+                new Sprite(true, PropButton.TexOpSyncDeath),
                 new Vector2(202, game.GetScreenSize().Y - 32));
 
             //Active item properties.
             bttnActionIndex1 = new PropButton(game,
-                new Sprite(true, PropButton.texPropActionInd1),
+                new Sprite(true, PropButton.TexPropActionInd1),
                 new Vector2(32, game.GetScreenSize().Y - 32));
             bttnActionIndex2 = new PropButton(game,
-                new Sprite(true, PropButton.texPropActionInd2),
+                new Sprite(true, PropButton.TexPropActionInd2),
                 new Vector2(66, game.GetScreenSize().Y - 32));
             bttnActionType = new PropButton(game,
-                new Sprite(true, PropButton.texPropActionType),
+                new Sprite(true, PropButton.TexPropActionType),
                 new Vector2(100, game.GetScreenSize().Y - 32));
             bttnVal1 = new PropButton(game,
-                new Sprite(true, PropButton.texPropCustInt1),
+                new Sprite(true, PropButton.TexPropCustInt1),
                 new Vector2(134, game.GetScreenSize().Y - 32));
             bttnVal2 = new PropButton(game,
-                new Sprite(true, PropButton.texPropCustInt2),
+                new Sprite(true, PropButton.TexPropCustInt2),
                 new Vector2(168, game.GetScreenSize().Y - 32));
             bttnText = new PropButton(game,
-                new Sprite(true, PropButton.texPropCustStr),
+                new Sprite(true, PropButton.TexPropCustStr),
                 new Vector2(202, game.GetScreenSize().Y - 32));
             bttnIsEnabled = new PropButton(game,
-                new Sprite(true, PropButton.texPropIsEnabled),
+                new Sprite(true, PropButton.TexPropIsEnabled),
                 new Vector2(236, game.GetScreenSize().Y - 32));
             bttnDir = new PropButton(game,
-                new Sprite(true, PropButton.texPropDir),
+                new Sprite(true, PropButton.TexPropDir),
                 new Vector2(268, game.GetScreenSize().Y - 32));
 
             //Sets up the sidebar.
-            sprSidebar = new Sprite(true, MngrLvl.texPixel);
+            sprSidebar = new Sprite(true, MngrLvl.TexPixel);
             sprSidebar.color = Color.Gray;
             sprSidebar.alpha = 0.5f;
             sprSidebar.rectDest = new SmoothRect
@@ -268,7 +262,7 @@ namespace EnduranceTheMaze
         public Vector2 GetCoords(float x, float y)
         {
             return Vector2.Transform
-                (new Vector2(x, y), Matrix.Invert(camera));
+                (new Vector2(x, y), Matrix.Invert(Camera));
         }
 
         /// <summary>
@@ -278,7 +272,7 @@ namespace EnduranceTheMaze
         public Vector2 GetCoordsMouse()
         {
             return Vector2.Transform(new Vector2(game.MsState.X,
-                game.MsState.Y), Matrix.Invert(camera));
+                game.MsState.Y), Matrix.Invert(Camera));
         }
 
         /// <summary>
@@ -349,12 +343,12 @@ namespace EnduranceTheMaze
                         //Gets a list of all blocks in the current position.
                         List<GameObj> blocks = new List<GameObj>();
                         foreach (ImgBlock block in items.Where(o =>
-                            o.x == (int)Math.Round(mouseX / 32f) &&
-                            o.y == (int)Math.Round(mouseY / 32f) &&
-                            o.layer == camLayer))
+                            o.X == (int)Math.Round(mouseX / 32f) &&
+                            o.Y == (int)Math.Round(mouseY / 32f) &&
+                            o.Layer == camLayer))
                         {
                             blocks.Add(Utils.BlockFromType
-                                (game, block.type, 0, 0, 0));
+                                (game, block.BlockType, 0, 0, 0));
                         }
 
                         //If the position is open for the mouse.
@@ -367,9 +361,9 @@ namespace EnduranceTheMaze
                             Type typeToUse = (isPasting) ? copyType : activeType;
 
                             if (!(Utils.BlockFromType
-                                (game, typeToUse, 0, 0, 0).isSolid &&
-                                blocks.Where(o => o.isSolid).Count() != 0) &&
-                                !(blocks.Where(o => o.type == typeToUse)
+                                (game, typeToUse, 0, 0, 0).IsSolid &&
+                                blocks.Where(o => o.IsSolid).Count() != 0) &&
+                                !(blocks.Where(o => o.BlockType == typeToUse)
                                 .Count() > 0 && typeToUse != Type.Filter &&
                                 typeToUse != Type.Teleporter))
                             {
@@ -389,16 +383,16 @@ namespace EnduranceTheMaze
                                 //Copies saved properties over it.
                                 if (isPasting)
                                 {
-                                    activeItem.actionIndex = copyActIndex1;
-                                    activeItem.actionIndex2 = copyActIndex2;
-                                    activeItem.custInt1 = copyCustInt1;
-                                    activeItem.custInt2 = copyCustInt2;
-                                    activeItem.actionType = copyActType;
-                                    activeItem.dir = copyDir;
-                                    activeItem.isEnabled = copyIsEnabled;
-                                    activeItem.custStr = copyCustStr;
+                                    activeItem.ActionIndex = copyActIndex1;
+                                    activeItem.ActionIndex2 = copyActIndex2;
+                                    activeItem.CustInt1 = copyCustInt1;
+                                    activeItem.CustInt2 = copyCustInt2;
+                                    activeItem.ActionType = copyActType;
+                                    activeItem.BlockDir = copyDir;
+                                    activeItem.IsEnabled = copyIsEnabled;
+                                    activeItem.CustStr = copyCustStr;
                                     activeItem.AdjustSprite();
-                                    activeItem.type = typeToUse;
+                                    activeItem.BlockType = typeToUse;
                                 }
                                 else
                                 {
@@ -406,7 +400,7 @@ namespace EnduranceTheMaze
                                 }
 
                                 //Adds a floor panel if there aren't any.
-                                if (blocks.Where(o => o.type == Type.Floor)
+                                if (blocks.Where(o => o.BlockType == Type.Floor)
                                     .Count() == 0 && typeToUse != Type.Floor)
                                 {
                                     items.Add(new ImgBlock(game, Type.Floor,
@@ -416,14 +410,14 @@ namespace EnduranceTheMaze
                                 }
 
                                 //Resets all button visibility.
-                                bttnActionIndex1.isVisible = true;
-                                bttnActionIndex2.isVisible = true;
-                                bttnActionType.isVisible = true;
-                                bttnDir.isVisible = true;
-                                bttnVal1.isVisible = true;
-                                bttnVal2.isVisible = true;
-                                bttnIsEnabled.isVisible = true;
-                                bttnText.isVisible = true;
+                                bttnActionIndex1.IsVisible = true;
+                                bttnActionIndex2.IsVisible = true;
+                                bttnActionType.IsVisible = true;
+                                bttnDir.IsVisible = true;
+                                bttnVal1.IsVisible = true;
+                                bttnVal2.IsVisible = true;
+                                bttnIsEnabled.IsVisible = true;
+                                bttnText.IsVisible = true;
                             }
                         }
                     }
@@ -433,9 +427,9 @@ namespace EnduranceTheMaze
                     {
                         //Gets a list of all items in the grid location.
                         List<ImgBlock> tempList = items.Where(o =>
-                            o.x == (int)Math.Round(mouseX / 32f) &&
-                            o.y == (int)Math.Round(mouseY / 32f) &&
-                            o.layer == camLayer).ToList();
+                            o.X == (int)Math.Round(mouseX / 32f) &&
+                            o.Y == (int)Math.Round(mouseY / 32f) &&
+                            o.Layer == camLayer).ToList();
 
                         //If the position is open, removes the item.
                         if (itemDragPos.Where(o =>
@@ -452,7 +446,7 @@ namespace EnduranceTheMaze
                             if (tempList.Count > 0)
                             {
                                 //Organizes by depth so top item is topmost.
-                                tempList.OrderBy(o => o.sprite.depth);
+                                tempList.OrderBy(o => o.BlockSprite.depth);
                                 tempList.Reverse();
 
                                 //Removes the item.
@@ -466,7 +460,7 @@ namespace EnduranceTheMaze
 
                                 //Removes the floor block if it stands alone.
                                 tempList.RemoveAt(0);
-                                if (tempList.Where(o => o.type != Type.Floor)
+                                if (tempList.Where(o => o.BlockType != Type.Floor)
                                     .Count() == 0)
                                 {
                                     foreach (ImgBlock item in tempList)
@@ -492,28 +486,28 @@ namespace EnduranceTheMaze
                     {
                         //Gets a list of all objects under the mouse.
                         List<ImgBlock> tempList = items.Where(o =>
-                            o.x == (int)Math.Round(mouseX / 32f) &&
-                            o.y == (int)Math.Round(mouseY / 32f) &&
-                            o.layer == camLayer).ToList();
+                            o.X == (int)Math.Round(mouseX / 32f) &&
+                            o.Y == (int)Math.Round(mouseY / 32f) &&
+                            o.Layer == camLayer).ToList();
 
                         //Organizes the list by depth.
                         if (tempList.Count != 0)
                         {
-                            tempList.OrderBy(o => o.sprite.depth);
+                            tempList.OrderBy(o => o.BlockSprite.depth);
                             tempList.Reverse();
 
                             //Toggles active item status on the block.
                             if (tempList[0] != activeItem)
                             {
                                 activeItem = tempList[0];
-                                bttnActionIndex1.isVisible = true;
-                                bttnActionIndex2.isVisible = true;
-                                bttnActionType.isVisible = true;
-                                bttnDir.isVisible = true;
-                                bttnVal1.isVisible = true;
-                                bttnVal2.isVisible = true;
-                                bttnIsEnabled.isVisible = true;
-                                bttnText.isVisible = true;
+                                bttnActionIndex1.IsVisible = true;
+                                bttnActionIndex2.IsVisible = true;
+                                bttnActionType.IsVisible = true;
+                                bttnDir.IsVisible = true;
+                                bttnVal1.IsVisible = true;
+                                bttnVal2.IsVisible = true;
+                                bttnIsEnabled.IsVisible = true;
+                                bttnText.IsVisible = true;
                             }
                             else
                             {
@@ -531,22 +525,22 @@ namespace EnduranceTheMaze
                             game.KbState.IsKeyDown(Keys.C) &&
                             game.KbStateOld.IsKeyUp(Keys.C))
                         {
-                            copyActIndex1 = activeItem.actionIndex;
-                            copyActIndex2 = activeItem.actionIndex2;
-                            copyCustInt1 = activeItem.custInt1;
-                            copyCustInt2 = activeItem.custInt2;
-                            copyActType = activeItem.actionType;
-                            copyDir = activeItem.dir;
-                            copyIsEnabled = activeItem.isEnabled;
-                            copyCustStr = activeItem.custStr;
-                            copyType = activeItem.type;
+                            copyActIndex1 = activeItem.ActionIndex;
+                            copyActIndex2 = activeItem.ActionIndex2;
+                            copyCustInt1 = activeItem.CustInt1;
+                            copyCustInt2 = activeItem.CustInt2;
+                            copyActType = activeItem.ActionType;
+                            copyDir = activeItem.BlockDir;
+                            copyIsEnabled = activeItem.IsEnabled;
+                            copyCustStr = activeItem.CustStr;
+                            copyType = activeItem.BlockType;
                         }
                     }
                     #endregion
                 }
 
                 //Handles moving up/down layers.
-                if (!bttnText.isHovered) //If not typing text.
+                if (!bttnText.IsHovered) //If not typing text.
                 {
                     if ((game.KbState.IsKeyDown(Keys.OemPlus) &&
                         game.KbStateOld.IsKeyUp(Keys.OemPlus)))
@@ -601,7 +595,7 @@ namespace EnduranceTheMaze
                 }
 
                 //Handles moving the camera.
-                if (!bttnText.isHovered)
+                if (!bttnText.IsHovered)
                 {
                     if ((game.KbState.IsKeyDown(Keys.D) ||
                         (game.KbState.IsKeyDown(Keys.Right))))
@@ -627,7 +621,7 @@ namespace EnduranceTheMaze
             }
 
             //Updates the camera position.
-            camera = Matrix.CreateTranslation(new Vector3(-camX, -camY, 0)) *
+            Camera = Matrix.CreateTranslation(new Vector3(-camX, -camY, 0)) *
                 Matrix.CreateScale(new Vector3(camZoom, camZoom, 1)) *
                 Matrix.CreateTranslation(
                 new Vector3(game.GetScreenSize().X * 0.5f,
@@ -646,7 +640,7 @@ namespace EnduranceTheMaze
                 bttnSyncDeath.Update();
 
                 #region Handles changing level settings / block properties.
-                if (bttnGameDelay.isHovered)
+                if (bttnGameDelay.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -666,7 +660,7 @@ namespace EnduranceTheMaze
                         opGameDelay--;
                     }
                 }
-                else if (bttnLvlLink.isHovered)
+                else if (bttnLvlLink.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -700,7 +694,7 @@ namespace EnduranceTheMaze
                         opLvlLink = "";
                     }
                 }
-                else if (bttnMaxSteps.isHovered)
+                else if (bttnMaxSteps.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -720,7 +714,7 @@ namespace EnduranceTheMaze
                         opMaxSteps--;
                     }
                 }
-                else if (bttnMinGoals.isHovered)
+                else if (bttnMinGoals.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -740,7 +734,7 @@ namespace EnduranceTheMaze
                         opMinGoals--;
                     }
                 }
-                else if (bttnSyncActors.isHovered)
+                else if (bttnSyncActors.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -760,7 +754,7 @@ namespace EnduranceTheMaze
                         opSyncActors = false;
                     }
                 }
-                else if (bttnSyncDeath.isHovered)
+                else if (bttnSyncDeath.IsHovered)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -813,7 +807,7 @@ namespace EnduranceTheMaze
                 bttnText.Update();
 
                 #region Handles changing active block values.
-                if (bttnActionIndex1.isHovered && bttnActionIndex1.isVisible)
+                if (bttnActionIndex1.IsHovered && bttnActionIndex1.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -821,7 +815,7 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionIndex++;
+                        activeItem.ActionIndex++;
                     }
 
                     //Right clicking or scrolling down.
@@ -830,11 +824,11 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionIndex--;
+                        activeItem.ActionIndex--;
                     }
                 }
-                else if (bttnActionIndex2.isHovered &&
-                    bttnActionIndex2.isVisible)
+                else if (bttnActionIndex2.IsHovered &&
+                    bttnActionIndex2.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -842,7 +836,7 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionIndex2++;
+                        activeItem.ActionIndex2++;
                     }
 
                     //Right clicking or scrolling down.
@@ -851,10 +845,10 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionIndex2--;
+                        activeItem.ActionIndex2--;
                     }
                 }
-                else if (bttnActionType.isHovered && bttnActionType.isVisible)
+                else if (bttnActionType.IsHovered && bttnActionType.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -862,7 +856,7 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionType++;
+                        activeItem.ActionType++;
                     }
 
                     //Right clicking or scrolling down.
@@ -871,10 +865,10 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.actionType--;
+                        activeItem.ActionType--;
                     }
                 }
-                else if (bttnDir.isHovered && bttnDir.isVisible)
+                else if (bttnDir.IsHovered && bttnDir.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -882,13 +876,13 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        if (activeItem.type == Type.Enemy)
+                        if (activeItem.BlockType == Type.Enemy)
                         {
-                            activeItem.dir = Utils.DirNextAll(activeItem.dir);
+                            activeItem.BlockDir = Utils.DirNextAll(activeItem.BlockDir);
                         }
                         else
                         {
-                            activeItem.dir = Utils.DirNext(activeItem.dir);
+                            activeItem.BlockDir = Utils.DirNext(activeItem.BlockDir);
                         }
                     }
 
@@ -898,17 +892,17 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        if (activeItem.type == Type.Enemy)
+                        if (activeItem.BlockType == Type.Enemy)
                         {
-                            activeItem.dir = Utils.DirPrevAll(activeItem.dir);
+                            activeItem.BlockDir = Utils.DirPrevAll(activeItem.BlockDir);
                         }
                         else
                         {
-                            activeItem.dir = Utils.DirPrev(activeItem.dir);
+                            activeItem.BlockDir = Utils.DirPrev(activeItem.BlockDir);
                         }
                     }
                 }
-                else if (bttnVal1.isHovered && bttnVal1.isVisible)
+                else if (bttnVal1.IsHovered && bttnVal1.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -916,11 +910,11 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.custInt1++;
-                        if (activeItem.type == Type.Filter &&
-                        activeItem.custInt1 == 0)
+                        activeItem.CustInt1++;
+                        if (activeItem.BlockType == Type.Filter &&
+                        activeItem.CustInt1 == 0)
                         {
-                            activeItem.custInt1 = 1;
+                            activeItem.CustInt1 = 1;
                         }
                     }
 
@@ -930,15 +924,15 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.custInt1--;
-                        if (activeItem.type == Type.Filter &&
-                            activeItem.custInt1 == 0)
+                        activeItem.CustInt1--;
+                        if (activeItem.BlockType == Type.Filter &&
+                            activeItem.CustInt1 == 0)
                         {
-                            activeItem.custInt1 = -1;
+                            activeItem.CustInt1 = -1;
                         }
                     }
                 }
-                else if (bttnVal2.isHovered && bttnVal2.isVisible)
+                else if (bttnVal2.IsHovered && bttnVal2.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -946,7 +940,7 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.custInt2++;
+                        activeItem.CustInt2++;
                     }
 
                     //Right clicking or scrolling down.
@@ -955,10 +949,10 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.custInt2--;
+                        activeItem.CustInt2--;
                     }
                 }
-                else if (bttnIsEnabled.isHovered && bttnIsEnabled.isVisible)
+                else if (bttnIsEnabled.IsHovered && bttnIsEnabled.IsVisible)
                 {
                     //Left clicking or scrolling up.
                     if ((game.MsState.LeftButton == ButtonState.Pressed &&
@@ -966,7 +960,7 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue >
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.isEnabled = true;
+                        activeItem.IsEnabled = true;
                     }
 
                     //Right clicking or scrolling down.
@@ -975,10 +969,10 @@ namespace EnduranceTheMaze
                         (game.MsState.ScrollWheelValue <
                         game.MsStateOld.ScrollWheelValue))
                     {
-                        activeItem.isEnabled = false;
+                        activeItem.IsEnabled = false;
                     }
                 }
-                else if (bttnText.isHovered && bttnText.isVisible)
+                else if (bttnText.IsHovered && bttnText.IsVisible)
                 {
                     //Gets all keys and whether shift is pressed.
                     Keys[] keys = game.KbState.GetPressedKeys();
@@ -999,273 +993,273 @@ namespace EnduranceTheMaze
                             game.KbStateOld.IsKeyUp(key))
                         {
                             //Adds the smart string representation.
-                            activeItem.custStr = KeyboardStateExt.KeyToString(
-                                activeItem.custStr, key, shiftPressed);
+                            activeItem.CustStr = KeyboardStateExt.KeyToString(
+                                activeItem.CustStr, key, shiftPressed);
                         }
                     }
                 }
                 #endregion
                 #region Sets block property ranges and button visibility.
                 //actionIndex.
-                if (activeItem.actionIndex < 0)
+                if (activeItem.ActionIndex < 0)
                 {
-                    activeItem.actionIndex = 0;
+                    activeItem.ActionIndex = 0;
                 }
 
                 //actionIndex2.
-                if (activeItem.actionIndex2 < 0)
+                if (activeItem.ActionIndex2 < 0)
                 {
-                    activeItem.actionIndex2 = 0;
+                    activeItem.ActionIndex2 = 0;
                 }
-                if (activeItem.type != Type.EAuto &&
-                    activeItem.type != Type.Panel &&
-                    activeItem.type != Type.Click)
+                if (activeItem.BlockType != Type.EAuto &&
+                    activeItem.BlockType != Type.Panel &&
+                    activeItem.BlockType != Type.Click)
                 {
-                    bttnActionIndex2.isVisible = false;
+                    bttnActionIndex2.IsVisible = false;
                 }
 
                 //actionType.
-                if (activeItem.actionType < 0)
+                if (activeItem.ActionType < 0)
                 {
-                    activeItem.actionType = 0;
+                    activeItem.ActionType = 0;
                 }
-                else if (activeItem.type == Type.Crate ||
-                    activeItem.type == Type.EPusher ||
-                    activeItem.type == Type.ELight)
+                else if (activeItem.BlockType == Type.Crate ||
+                    activeItem.BlockType == Type.EPusher ||
+                    activeItem.BlockType == Type.ELight)
                 {
-                    if (activeItem.actionType > 5)
+                    if (activeItem.ActionType > 5)
                     {
-                        activeItem.actionType = 5;
+                        activeItem.ActionType = 5;
                     }
                 }
-                else if (activeItem.type == Type.Gate)
+                else if (activeItem.BlockType == Type.Gate)
                 {
-                    if (activeItem.actionType > 7)
+                    if (activeItem.ActionType > 7)
                     {
-                        activeItem.actionType = 7;
+                        activeItem.ActionType = 7;
                     }
                 }
-                else if (activeItem.type == Type.Click ||
-                    activeItem.type == Type.EAuto ||
-                    activeItem.type == Type.Panel ||
-                    activeItem.type == Type.Rotate)
+                else if (activeItem.BlockType == Type.Click ||
+                    activeItem.BlockType == Type.EAuto ||
+                    activeItem.BlockType == Type.Panel ||
+                    activeItem.BlockType == Type.Rotate)
                 {
-                    if (activeItem.actionType > 7)
+                    if (activeItem.ActionType > 7)
                     {
-                        activeItem.actionType = 7;
+                        activeItem.ActionType = 7;
                     }
                 }
-                else if (activeItem.type == Type.Spawner ||
-                    activeItem.type == Type.Filter)
+                else if (activeItem.BlockType == Type.Spawner ||
+                    activeItem.BlockType == Type.Filter)
                 {
-                    if (activeItem.actionType - 4 >
+                    if (activeItem.ActionType - 4 >
                         Enum.GetNames(typeof(Type)).Length)
                     {
-                        activeItem.actionType =
+                        activeItem.ActionType =
                             Enum.GetNames(typeof(Type)).Length + 4;
                     }
                 }
-                else if (activeItem.type == Type.Turret)
+                else if (activeItem.BlockType == Type.Turret)
                 {
-                    if (activeItem.actionType > 5)
+                    if (activeItem.ActionType > 5)
                     {
-                        activeItem.actionType = 5;
+                        activeItem.ActionType = 5;
                     }
                 }
-                else if (activeItem.actionType > 4)
+                else if (activeItem.ActionType > 4)
                 {
-                    activeItem.actionType = 4;
+                    activeItem.ActionType = 4;
                 }
 
                 //custInt1.
-                if (activeItem.type == Type.Crate)
+                if (activeItem.BlockType == Type.Crate)
                 {
-                    if (activeItem.custInt1 >
+                    if (activeItem.CustInt1 >
                         Enum.GetNames(typeof(Type)).Length)
                     {
-                        activeItem.custInt1 =
+                        activeItem.CustInt1 =
                             Enum.GetNames(typeof(Type)).Length;
                     }
-                    if (activeItem.custInt1 < 0)
+                    if (activeItem.CustInt1 < 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
-                else if (activeItem.type == Type.Rotate)
+                else if (activeItem.BlockType == Type.Rotate)
                 {
                     //No maximum limit on rotation grid's size.
-                    if (activeItem.custInt1 < 0)
+                    if (activeItem.CustInt1 < 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
-                else if (activeItem.type == Type.CoinLock)
+                else if (activeItem.BlockType == Type.CoinLock)
                 {
                     //No maximum limit on number of coins required.
-                    if (activeItem.custInt1 < 1)
+                    if (activeItem.CustInt1 < 1)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
-                else if (activeItem.type == Type.EAuto)
+                else if (activeItem.BlockType == Type.EAuto)
                 {
-                    if (activeItem.custInt1 < 2)
+                    if (activeItem.CustInt1 < 2)
                     {
-                        activeItem.custInt1 = 2;
+                        activeItem.CustInt1 = 2;
                     }
                 }
-                else if (activeItem.type == Type.Filter)
+                else if (activeItem.BlockType == Type.Filter)
                 {
-                    if (activeItem.custInt1 == 0)
+                    if (activeItem.CustInt1 == 0)
                     {
-                        activeItem.custInt1 = 1;
+                        activeItem.CustInt1 = 1;
                     }
-                    if (activeItem.custInt1 < -1)
+                    if (activeItem.CustInt1 < -1)
                     {
-                        activeItem.custInt1 = -1;
+                        activeItem.CustInt1 = -1;
                     }
                 }
-                else if (activeItem.type == Type.Checkpoint ||
-                    activeItem.type == Type.Click ||
-                    activeItem.type == Type.Gate ||
-                    activeItem.type == Type.Stairs ||
-                    activeItem.type == Type.Panel ||
-                    activeItem.type == Type.MultiWay ||
-                    activeItem.type == Type.Teleporter)
+                else if (activeItem.BlockType == Type.Checkpoint ||
+                    activeItem.BlockType == Type.Click ||
+                    activeItem.BlockType == Type.Gate ||
+                    activeItem.BlockType == Type.Stairs ||
+                    activeItem.BlockType == Type.Panel ||
+                    activeItem.BlockType == Type.MultiWay ||
+                    activeItem.BlockType == Type.Teleporter)
                 {
-                    if (activeItem.custInt1 > 1)
+                    if (activeItem.CustInt1 > 1)
                     {
-                        activeItem.custInt1 = 1;
+                        activeItem.CustInt1 = 1;
                     }
-                    else if (activeItem.custInt1 < 0)
+                    else if (activeItem.CustInt1 < 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
-                else if (activeItem.type == Type.Key ||
-                    activeItem.type == Type.Lock)
+                else if (activeItem.BlockType == Type.Key ||
+                    activeItem.BlockType == Type.Lock)
                 {
-                    if (activeItem.custInt1 > 9)
+                    if (activeItem.CustInt1 > 9)
                     {
-                        activeItem.custInt1 = 9;
+                        activeItem.CustInt1 = 9;
                     }
-                    else if (activeItem.custInt1 < 0)
+                    else if (activeItem.CustInt1 < 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
-                else if (activeItem.type == Type.Turret)
+                else if (activeItem.BlockType == Type.Turret)
                 {
-                    if (activeItem.custInt1 < 2)
+                    if (activeItem.CustInt1 < 2)
                     {
-                        activeItem.custInt1 = 2;
+                        activeItem.CustInt1 = 2;
                     }
-                    else if (activeItem.custInt1 < 0)
+                    else if (activeItem.CustInt1 < 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
                 }
                 else
                 {
-                    if (activeItem.custInt1 != 0)
+                    if (activeItem.CustInt1 != 0)
                     {
-                        activeItem.custInt1 = 0;
+                        activeItem.CustInt1 = 0;
                     }
 
-                    bttnVal1.isVisible = false;
+                    bttnVal1.IsVisible = false;
                 }
 
                 //custInt2.
-                if (activeItem.custInt2 < 0)
+                if (activeItem.CustInt2 < 0)
                 {
-                    activeItem.custInt2 = 0;
+                    activeItem.CustInt2 = 0;
                 }
-                if (activeItem.type == Type.Teleporter)
+                if (activeItem.BlockType == Type.Teleporter)
                 {
                     //No max limit on teleporter channel.
                 }
-                else if (activeItem.type == Type.Click ||
-                    activeItem.type == Type.CoinLock ||
-                    activeItem.type == Type.Filter ||
-                    activeItem.type == Type.EAuto ||
-                    activeItem.type == Type.Gate)
+                else if (activeItem.BlockType == Type.Click ||
+                    activeItem.BlockType == Type.CoinLock ||
+                    activeItem.BlockType == Type.Filter ||
+                    activeItem.BlockType == Type.EAuto ||
+                    activeItem.BlockType == Type.Gate)
                 {
-                    if (activeItem.custInt2 > 1)
+                    if (activeItem.CustInt2 > 1)
                     {
-                        activeItem.custInt2 = 1;
+                        activeItem.CustInt2 = 1;
                     }
                 }
-                else if (activeItem.type == Type.Turret)
+                else if (activeItem.BlockType == Type.Turret)
                 {
-                    if (activeItem.custInt2 < 3)
+                    if (activeItem.CustInt2 < 3)
                     {
-                        activeItem.custInt2 = 3;
+                        activeItem.CustInt2 = 3;
                     }
-                    else if (activeItem.custInt2 > 15)
+                    else if (activeItem.CustInt2 > 15)
                     {
-                        activeItem.custInt2 = 15;
+                        activeItem.CustInt2 = 15;
                     }
                 }
                 else
                 {
-                    if (activeItem.custInt2 > 0)
+                    if (activeItem.CustInt2 > 0)
                     {
-                        activeItem.custInt2 = 0;
+                        activeItem.CustInt2 = 0;
                     }
 
-                    bttnVal2.isVisible = false;
+                    bttnVal2.IsVisible = false;
                 }
 
                 //dir.
-                if (activeItem.type != Type.Actor &&
-                    activeItem.type != Type.Belt &&
-                    activeItem.type != Type.Crate &&
-                    activeItem.type != Type.Enemy &&
-                    activeItem.type != Type.EPusher &&
-                    activeItem.type != Type.Mirror &&
-                    activeItem.type != Type.MultiWay &&
-                    activeItem.type != Type.Spawner &&
-                    activeItem.type != Type.Turret)
+                if (activeItem.BlockType != Type.Actor &&
+                    activeItem.BlockType != Type.Belt &&
+                    activeItem.BlockType != Type.Crate &&
+                    activeItem.BlockType != Type.Enemy &&
+                    activeItem.BlockType != Type.EPusher &&
+                    activeItem.BlockType != Type.Mirror &&
+                    activeItem.BlockType != Type.MultiWay &&
+                    activeItem.BlockType != Type.Spawner &&
+                    activeItem.BlockType != Type.Turret)
                 {
-                    activeItem.dir = Dir.Right;
-                    bttnDir.isVisible = false;
+                    activeItem.BlockDir = Dir.Right;
+                    bttnDir.IsVisible = false;
                 }
 
                 //Only enemy blocks can have diagonal directions.
-                if (activeItem.type != Type.Enemy &&
-                    !Utils.DirCardinal(activeItem.dir))
+                if (activeItem.BlockType != Type.Enemy &&
+                    !Utils.DirCardinal(activeItem.BlockDir))
                 {
-                    activeItem.dir = Utils.DirNextAll(activeItem.dir);
+                    activeItem.BlockDir = Utils.DirNextAll(activeItem.BlockDir);
                 }
 
                 //These aren't affected by enabledness.
-                if (activeItem.type == Type.Checkpoint ||
-                    activeItem.type == Type.Coin ||
-                    activeItem.type == Type.Crate ||
-                    activeItem.type == Type.CrateHole ||
-                    activeItem.type == Type.Finish ||
-                    activeItem.type == Type.Floor ||
-                    activeItem.type == Type.Freeze ||
-                    activeItem.type == Type.Goal ||
-                    activeItem.type == Type.Health ||
-                    activeItem.type == Type.Ice ||
-                    activeItem.type == Type.Key ||
-                    activeItem.type == Type.Lock ||
-                    activeItem.type == Type.Message ||
-                    activeItem.type == Type.Mirror ||
-                    activeItem.type == Type.Spike ||
-                    activeItem.type == Type.Stairs ||
-                    activeItem.type == Type.Thaw ||
-                    activeItem.type == Type.Wall)
+                if (activeItem.BlockType == Type.Checkpoint ||
+                    activeItem.BlockType == Type.Coin ||
+                    activeItem.BlockType == Type.Crate ||
+                    activeItem.BlockType == Type.CrateHole ||
+                    activeItem.BlockType == Type.Finish ||
+                    activeItem.BlockType == Type.Floor ||
+                    activeItem.BlockType == Type.Freeze ||
+                    activeItem.BlockType == Type.Goal ||
+                    activeItem.BlockType == Type.Health ||
+                    activeItem.BlockType == Type.Ice ||
+                    activeItem.BlockType == Type.Key ||
+                    activeItem.BlockType == Type.Lock ||
+                    activeItem.BlockType == Type.Message ||
+                    activeItem.BlockType == Type.Mirror ||
+                    activeItem.BlockType == Type.Spike ||
+                    activeItem.BlockType == Type.Stairs ||
+                    activeItem.BlockType == Type.Thaw ||
+                    activeItem.BlockType == Type.Wall)
                 {
-                    activeItem.isEnabled = true;
-                    bttnIsEnabled.isVisible = false;
+                    activeItem.IsEnabled = true;
+                    bttnIsEnabled.IsVisible = false;
                 }
 
                 //Text.
-                if (activeItem.type != Type.Message)
+                if (activeItem.BlockType != Type.Message)
                 {
-                    bttnText.isVisible = false;
+                    bttnText.IsVisible = false;
                 }
                 #endregion
 
@@ -1279,8 +1273,8 @@ namespace EnduranceTheMaze
             //Updates the positions of all selectable block types.
             for (int i = 0; i < itemTypes.Count; i++)
             {
-                itemTypes[i].x = 0;
-                itemTypes[i].y = i;
+                itemTypes[i].X = 0;
+                itemTypes[i].Y = i;
                 itemTypes[i].Update();
             }
             #endregion
@@ -1301,7 +1295,7 @@ namespace EnduranceTheMaze
             }
             else
             {
-                tooltip += "Block: " + activeItem.type;
+                tooltip += "Block: " + activeItem.BlockType;
             }
         }
 
@@ -1311,26 +1305,26 @@ namespace EnduranceTheMaze
         public void Draw()
         {
             //Organizes all items by sprite depth.
-            items = items.OrderByDescending(o => o.sprite.depth).ToList();
+            items = items.OrderByDescending(o => o.BlockSprite.depth).ToList();
 
             //Draws each item.
             foreach (ImgBlock item in items)
             {
                 //Renders above/below layers at 25% alpha.
-                if (item.layer == camLayer + 1 ||
-                    item.layer == camLayer - 1)
+                if (item.Layer == camLayer + 1 ||
+                    item.Layer == camLayer - 1)
                 {
-                    item.sprite.alpha = 0.25f;
+                    item.BlockSprite.alpha = 0.25f;
                 }
                 else
                 {
-                    item.sprite.alpha = 1;
+                    item.BlockSprite.alpha = 1;
                 }
 
                 //Only draws the current, below, and above layers.
-                if (item.layer == camLayer ||
-                    item.layer == camLayer + 1 ||
-                    item.layer == camLayer - 1)
+                if (item.Layer == camLayer ||
+                    item.Layer == camLayer + 1 ||
+                    item.Layer == camLayer - 1)
                 {
                     item.Draw();
                 }
@@ -1339,8 +1333,8 @@ namespace EnduranceTheMaze
             //Draws the active item indicator.
             if (activeItem != null)
             {
-                game.GameSpriteBatch.Draw(MngrLvl.texPixel, new Rectangle(
-                    activeItem.x * 32 - 16, activeItem.y * 32 - 16,
+                game.GameSpriteBatch.Draw(MngrLvl.TexPixel, new Rectangle(
+                    activeItem.X * 32 - 16, activeItem.Y * 32 - 16,
                     32, 32), Color.Yellow * 0.5f);
             }
 
@@ -1359,13 +1353,13 @@ namespace EnduranceTheMaze
                     blk = new ImgBlock(game, (Type)copyType,
                         selX, selY, 0);
 
-                    blk.actionIndex = copyActIndex1;
-                    blk.actionIndex2 = copyActIndex2;
-                    blk.actionType = copyActType;
-                    blk.custInt1 = copyCustInt1;
-                    blk.custInt2 = copyCustInt2;
-                    blk.dir = copyDir;
-                    blk.isEnabled = copyIsEnabled;
+                    blk.ActionIndex = copyActIndex1;
+                    blk.ActionIndex2 = copyActIndex2;
+                    blk.ActionType = copyActType;
+                    blk.CustInt1 = copyCustInt1;
+                    blk.CustInt2 = copyCustInt2;
+                    blk.BlockDir = copyDir;
+                    blk.IsEnabled = copyIsEnabled;
                 }
                 else
                 {
@@ -1376,10 +1370,10 @@ namespace EnduranceTheMaze
                 }
 
                 blk.AdjustSprite();
-                blk.sprite.alpha = 0.5f;
-                if (blk.type != Type.Key && blk.type != Type.Lock)
+                blk.BlockSprite.alpha = 0.5f;
+                if (blk.BlockType != Type.Key && blk.BlockType != Type.Lock)
                 {
-                    blk.sprite.color = Color.Green;
+                    blk.BlockSprite.color = Color.Green;
                 }
 
                 blk.Draw();
@@ -1414,23 +1408,23 @@ namespace EnduranceTheMaze
                 bttnGameDelay.Draw(); //Delay in game timer.
                 tempText.text = opGameDelay.ToString();
                 tempText.position = new Vector2(
-                    bttnGameDelay.pos.X + 16,
-                    bttnGameDelay.pos.Y + 16);
+                    bttnGameDelay.Pos.X + 16,
+                    bttnGameDelay.Pos.Y + 16);
                 tempText.CenterOrigin();
                 tempText.Draw(game.GameSpriteBatch);
                 bttnLvlLink.Draw(); //Next level to play when completed.
                 bttnMaxSteps.Draw(); //Maximum steps allowed.
                 tempText.text = opMaxSteps.ToString();
                 tempText.position = new Vector2(
-                    bttnMaxSteps.pos.X + 16,
-                    bttnMaxSteps.pos.Y + 16);
+                    bttnMaxSteps.Pos.X + 16,
+                    bttnMaxSteps.Pos.Y + 16);
                 tempText.CenterOrigin();
                 tempText.Draw(game.GameSpriteBatch);
                 bttnMinGoals.Draw(); //Minimum goals required.
                 tempText.text = opMinGoals.ToString();
                 tempText.position = new Vector2(
-                    bttnMinGoals.pos.X + 16,
-                    bttnMinGoals.pos.Y + 16);
+                    bttnMinGoals.Pos.X + 16,
+                    bttnMinGoals.Pos.Y + 16);
                 tempText.CenterOrigin();
                 tempText.Draw(game.GameSpriteBatch);
                 bttnSyncActors.Draw(); //If all actors copy active movements.
@@ -1443,8 +1437,8 @@ namespace EnduranceTheMaze
                     tempText.text = "off";
                 }
                 tempText.position = new Vector2(
-                    bttnSyncActors.pos.X + 16,
-                    bttnSyncActors.pos.Y + 16);
+                    bttnSyncActors.Pos.X + 16,
+                    bttnSyncActors.Pos.Y + 16);
                 tempText.CenterOrigin();
                 tempText.Draw(game.GameSpriteBatch);
                 bttnSyncDeath.Draw(); //If any actor death reverts to chkpt.
@@ -1457,18 +1451,18 @@ namespace EnduranceTheMaze
                     tempText.text = "off";
                 }
                 tempText.position = new Vector2(
-                    bttnSyncDeath.pos.X + 16,
-                    bttnSyncDeath.pos.Y + 16);
+                    bttnSyncDeath.Pos.X + 16,
+                    bttnSyncDeath.Pos.Y + 16);
                 tempText.CenterOrigin();
                 tempText.Draw(game.GameSpriteBatch);
                 #endregion
                 #region Draws level settings based on values.
-                if (bttnGameDelay.isHovered)
+                if (bttnGameDelay.IsHovered)
                 {
                     tooltip = "The game timer delay. Lower values make " +
                         "moving objects faster, and vice versa.";
                 }
-                if (bttnLvlLink.isHovered)
+                if (bttnLvlLink.IsHovered)
                 {
                     if (opLvlLink == "")
                     {
@@ -1480,21 +1474,21 @@ namespace EnduranceTheMaze
                         tooltip = "Next lvl: " + opLvlLink;
                     }
                 }
-                if (bttnMaxSteps.isHovered)
+                if (bttnMaxSteps.IsHovered)
                 {
                     tooltip = "If not zero: Limits the number of movements " +
                         "the player can make for a puzzle twist.";
                 }
-                if (bttnMinGoals.isHovered)
+                if (bttnMinGoals.IsHovered)
                 {
                     tooltip = "The number of goal objects required to beat " +
                         "the level.";
                 }
-                if (bttnSyncActors.isHovered)
+                if (bttnSyncActors.IsHovered)
                 {
                     tooltip = "If on, all actors try to copy your movements.";
                 }
-                if (bttnSyncDeath.isHovered)
+                if (bttnSyncDeath.IsHovered)
                 {
                     tooltip = "If on, the level reverts to last checkpoint " +
                         "on any actor death.";
@@ -1511,63 +1505,63 @@ namespace EnduranceTheMaze
                 #region Draws active item properties + text.
 
                 //Draws all toolbar buttons with text.
-                if (bttnActionIndex1.isVisible)
+                if (bttnActionIndex1.IsVisible)
                 {
                     bttnActionIndex1.Draw();
-                    tempText.text = activeItem.actionIndex.ToString();
+                    tempText.text = activeItem.ActionIndex.ToString();
                     tempText.position = new Vector2(
-                        bttnActionIndex1.pos.X + 16,
-                        bttnActionIndex1.pos.Y + 16);
+                        bttnActionIndex1.Pos.X + 16,
+                        bttnActionIndex1.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnActionIndex2.isVisible)
+                if (bttnActionIndex2.IsVisible)
                 {
                     bttnActionIndex2.Draw();
-                    tempText.text = activeItem.actionIndex2.ToString();
+                    tempText.text = activeItem.ActionIndex2.ToString();
                     tempText.position = new Vector2(
-                        bttnActionIndex2.pos.X + 16,
-                        bttnActionIndex2.pos.Y + 16);
+                        bttnActionIndex2.Pos.X + 16,
+                        bttnActionIndex2.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnDir.isVisible)
+                if (bttnDir.IsVisible)
                 {
                     bttnDir.Draw();
                 }
-                if (bttnActionType.isVisible)
+                if (bttnActionType.IsVisible)
                 {
                     bttnActionType.Draw();
-                    tempText.text = activeItem.actionType.ToString();
+                    tempText.text = activeItem.ActionType.ToString();
                     tempText.position = new Vector2(
-                        bttnActionType.pos.X + 16,
-                        bttnActionType.pos.Y + 16);
+                        bttnActionType.Pos.X + 16,
+                        bttnActionType.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnVal1.isVisible)
+                if (bttnVal1.IsVisible)
                 {
                     bttnVal1.Draw();
-                    tempText.text = activeItem.custInt1.ToString();
+                    tempText.text = activeItem.CustInt1.ToString();
                     tempText.position = new Vector2(
-                        bttnVal1.pos.X + 16,
-                        bttnVal1.pos.Y + 16);
+                        bttnVal1.Pos.X + 16,
+                        bttnVal1.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnVal2.isVisible)
+                if (bttnVal2.IsVisible)
                 {
                     bttnVal2.Draw();
-                    tempText.text = activeItem.custInt2.ToString();
+                    tempText.text = activeItem.CustInt2.ToString();
                     tempText.position = new Vector2(
-                        bttnVal2.pos.X + 16,
-                        bttnVal2.pos.Y + 16);
+                        bttnVal2.Pos.X + 16,
+                        bttnVal2.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnIsEnabled.isVisible)
+                if (bttnIsEnabled.IsVisible)
                 {
-                    if (activeItem.isEnabled)
+                    if (activeItem.IsEnabled)
                     {
                         tempText.text = "on";
                     }
@@ -1578,40 +1572,40 @@ namespace EnduranceTheMaze
 
                     bttnIsEnabled.Draw();
                     tempText.position = new Vector2(
-                        bttnIsEnabled.pos.X + 16,
-                        bttnIsEnabled.pos.Y + 16);
+                        bttnIsEnabled.Pos.X + 16,
+                        bttnIsEnabled.Pos.Y + 16);
                     tempText.CenterOrigin();
                     tempText.Draw(game.GameSpriteBatch);
                 }
-                if (bttnText.isVisible)
+                if (bttnText.IsVisible)
                 {
                     bttnText.Draw();
                 }
                 #endregion
                 #region Draws active block properties based on values.
                 #region Handles ActionIndex1
-                if (bttnActionIndex1.isHovered && bttnActionIndex1.isVisible)
+                if (bttnActionIndex1.IsHovered && bttnActionIndex1.IsVisible)
                 {
                     tooltip = "The activation channel. Matching actuator " +
                         "channels can activate this block.";
                 }
                 #endregion
                 #region Handles ActionIndex2
-                else if (bttnActionIndex2.isHovered &&
-                    bttnActionIndex2.isVisible)
+                else if (bttnActionIndex2.IsHovered &&
+                    bttnActionIndex2.IsVisible)
                 {
                     tooltip = "The actuator channel. The activation " +
                         "channel to be activated by panels, for example.";
                 }
                 #endregion
                 #region Handles ActionType
-                else if (bttnActionType.isHovered && bttnActionType.isVisible)
+                else if (bttnActionType.IsHovered && bttnActionType.IsVisible)
                 {
                     tooltip = "When activated: ";
 
-                    if (activeItem.actionType < 5)
+                    if (activeItem.ActionType < 5)
                     {
-                        switch (activeItem.actionType)
+                        switch (activeItem.ActionType)
                         {
                             case 0:
                                 tooltip += "toggles block visibility.";
@@ -1632,121 +1626,121 @@ namespace EnduranceTheMaze
                     }
                     else
                     {
-                        switch (activeItem.type)
+                        switch (activeItem.BlockType)
                         {
                             case Type.Click:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "activates linked items " +
                                         "on trigger.";
                                 }
-                                else if (activeItem.actionType == 6)
+                                else if (activeItem.ActionType == 6)
                                 {
                                     tooltip += "deactivates linked items " +
                                         "on trigger.";
                                 }
-                                else if (activeItem.actionType == 7)
+                                else if (activeItem.ActionType == 7)
                                 {
                                     tooltip += "de/activates linked items " +
                                         "each other trigger.";
                                 }
                                 break;
                             case Type.Crate:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "breaks open.";
                                 }
                                 break;
                             case Type.EAuto:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "activates linked items " +
                                         "on trigger.";
                                 }
-                                else if (activeItem.actionType == 6)
+                                else if (activeItem.ActionType == 6)
                                 {
                                     tooltip += "deactivates linked items " +
                                         "on trigger.";
                                 }
-                                else if (activeItem.actionType == 7)
+                                else if (activeItem.ActionType == 7)
                                 {
                                     tooltip += "de/activates linked items " +
                                         "each other trigger.";
                                 }
                                 break;
                             case Type.ELight:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "lights up while active.";
                                 }
                                 break;
                             case Type.EPusher:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "pushes blocks if possible.";
                                 }
                                 break;
                             case Type.Filter:
                                 tooltip += "becomes " +
-                                    (Type)(activeItem.actionType - 5) +
+                                    (Type)(activeItem.ActionType - 5) +
                                     " if possible.";
                                 break;
                             case Type.Gate:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "toggles block solidity.";
                                 }
-                                else if (activeItem.actionType == 6)
+                                else if (activeItem.ActionType == 6)
                                 {
                                     tooltip += "is solid, but otherwise " +
                                         "is not.";
                                 }
-                                else if (activeItem.actionType == 7)
+                                else if (activeItem.ActionType == 7)
                                 {
                                     tooltip += "isn't solid, but otherwise " +
                                         "is.";
                                 }
                                 break;
                             case Type.Panel:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "activates and deactivates " +
                                         "linked items when pressed.";
                                 }
-                                else if (activeItem.actionType == 6)
+                                else if (activeItem.ActionType == 6)
                                 {
                                     tooltip += "activates linked items " +
                                         "when pressed.";
                                 }
-                                else if (activeItem.actionType == 7)
+                                else if (activeItem.ActionType == 7)
                                 {
                                     tooltip += "activates linked items " +
                                         "when pressed, then disables itself.";
                                 }
                                 break;
                             case Type.Rotate:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "rotates 90 degrees " +
                                         "clockwise.";
                                 }
-                                else if (activeItem.actionType == 6)
+                                else if (activeItem.ActionType == 6)
                                 {
                                     tooltip += "rotates 90 degrees " +
                                         "counter-clockwise.";
                                 }
-                                else if (activeItem.actionType == 7)
+                                else if (activeItem.ActionType == 7)
                                 {
                                     tooltip += "rotates 180 degrees.";
                                 }
                                 break;
                             case Type.Spawner:
                                 tooltip += "creates " +
-                                    (Type)(activeItem.actionType - 5) +
+                                    (Type)(activeItem.ActionType - 5) +
                                     " in the pointed direction if possible.";
                                 break;
                             case Type.Turret:
-                                if (activeItem.actionType == 5)
+                                if (activeItem.ActionType == 5)
                                 {
                                     tooltip += "fires a bullet.";
                                 }
@@ -1756,47 +1750,47 @@ namespace EnduranceTheMaze
                 }
                 #endregion
                 #region Handles CustDir (custom direction)
-                else if (bttnDir.isHovered && bttnDir.isVisible)
+                else if (bttnDir.IsHovered && bttnDir.IsVisible)
                 {
-                    tooltip = activeItem.dir.ToString();
+                    tooltip = activeItem.BlockDir.ToString();
                 }
                 #endregion
                 #region Handles CustInt1
-                else if (bttnVal1.isHovered && bttnVal1.isVisible)
+                else if (bttnVal1.IsHovered && bttnVal1.IsVisible)
                 {
-                    switch (activeItem.type)
+                    switch (activeItem.BlockType)
                     {
                         case Type.Checkpoint:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Saves every time an actor " +
                                     "touches the block.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Saves when an actor touches " +
                                     "the block, then deletes it.";
                             }
                             break;
                         case Type.Click:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Functions normally.";
                             }
-                            if (activeItem.custInt1 == 1)
+                            if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Deletes itself after one use.";
                             }
                             break;
                         case Type.CoinLock:
                             tooltip = "Opens on contact when the player has " +
-                                activeItem.custInt1 + "coins.";
+                                activeItem.CustInt1 + "coins.";
                             break;
                         case Type.Crate:
-                            if (activeItem.custInt1 > 0)
+                            if (activeItem.CustInt1 > 0)
                             {
                                 tooltip = "When crate breaks, contains: " +
-                                    (Type)(activeItem.custInt1 - 1);
+                                    (Type)(activeItem.CustInt1 - 1);
                             }
                             else
                             {
@@ -1805,27 +1799,27 @@ namespace EnduranceTheMaze
                             break;
                         case Type.EAuto:
                             tooltip = "Triggers every " +
-                                activeItem.custInt1 + " frames.";
+                                activeItem.CustInt1 + " frames.";
                             break;
                         case Type.Filter:
-                            if (activeItem.custInt1 > 0)
+                            if (activeItem.CustInt1 > 0)
                             {
                                 tooltip = "If passed over " +
-                                    activeItem.custInt1 + " times, it " +
+                                    activeItem.CustInt1 + " times, it " +
                                     "activates.";
                             }
-                            else if (activeItem.custInt1 == -1)
+                            else if (activeItem.CustInt1 == -1)
                             {
                                 tooltip = "Cannot be activated by passing " +
                                     "over it.";
                             }
                             break;
                         case Type.Gate:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Can't close on solid objects.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "May close on actors. Trapped " +
                                     "actors automatically lose all health.";
@@ -1833,90 +1827,90 @@ namespace EnduranceTheMaze
                             break;
                         case Type.Key:
                         case Type.Lock:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Blue.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Red.";
                             }
-                            else if (activeItem.custInt1 == 2)
+                            else if (activeItem.CustInt1 == 2)
                             {
                                 tooltip = "Yellow.";
                             }
-                            else if (activeItem.custInt1 == 3)
+                            else if (activeItem.CustInt1 == 3)
                             {
                                 tooltip = "Purple.";
                             }
-                            else if (activeItem.custInt1 == 4)
+                            else if (activeItem.CustInt1 == 4)
                             {
                                 tooltip = "Orange.";
                             }
-                            else if (activeItem.custInt1 == 5)
+                            else if (activeItem.CustInt1 == 5)
                             {
                                 tooltip = "Black.";
                             }
-                            else if (activeItem.custInt1 == 6)
+                            else if (activeItem.CustInt1 == 6)
                             {
                                 tooltip = "Dark blue.";
                             }
-                            else if (activeItem.custInt1 == 7)
+                            else if (activeItem.CustInt1 == 7)
                             {
                                 tooltip = "Dark red.";
                             }
-                            else if (activeItem.custInt1 == 8)
+                            else if (activeItem.CustInt1 == 8)
                             {
                                 tooltip = "Dark yellow.";
                             }
-                            else if (activeItem.custInt1 == 9)
+                            else if (activeItem.CustInt1 == 9)
                             {
                                 tooltip = "Dark orange.";
                             }
                             break;
                         case Type.MultiWay:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "The block is one-way.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "The block is two-way.";
                             }
                             break;
                         case Type.Panel:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Works for linked items " +
                                     "regardless of layer.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Works for linked items on the " +
                                     "same layer only.";
                             }
                             break;
                         case Type.Rotate:
-                                tooltip = "Rotates " + activeItem.custInt1 +
-                                    " * " + activeItem.custInt1 + " blocks.";
+                                tooltip = "Rotates " + activeItem.CustInt1 +
+                                    " * " + activeItem.CustInt1 + " blocks.";
                             break;
                         case Type.Stairs:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Stairs lead upwards.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Stairs lead downwards.";
                             }
                             break;
                         case Type.Teleporter:
-                            if (activeItem.custInt1 == 0)
+                            if (activeItem.CustInt1 == 0)
                             {
                                 tooltip = "Teleporter is a sender. Blocks " +
                                     "enter this to teleport.";
                             }
-                            else if (activeItem.custInt1 == 1)
+                            else if (activeItem.CustInt1 == 1)
                             {
                                 tooltip = "Teleporter is a receiver. " +
                                     "Blocks appear here when they teleport.";
@@ -1924,90 +1918,90 @@ namespace EnduranceTheMaze
                             break;
                         case Type.Turret:
                             tooltip = "Shoots bullets every " +
-                                activeItem.custInt1 +
+                                activeItem.CustInt1 +
                                 " frames.";
                             break;
                     }
                 }
                 #endregion
                 #region Handles CustInt2
-                else if (bttnVal2.isHovered && bttnVal2.isVisible)
+                else if (bttnVal2.IsHovered && bttnVal2.IsVisible)
                 {
-                    switch (activeItem.type)
+                    switch (activeItem.BlockType)
                     {
                         case Type.CoinLock:
-                            if (activeItem.custInt2 == 0)
+                            if (activeItem.CustInt2 == 0)
                             {
                                 tooltip = "Doesn't subtract coins on unlocking.";
                             }
-                            else if (activeItem.custInt2 == 1)
+                            else if (activeItem.CustInt2 == 1)
                             {
                                 tooltip = "Subtracts coins on unlocking.";
                             }
                             break;
                         case Type.Click:
                         case Type.EAuto:
-                            if (activeItem.custInt2 == 0)
+                            if (activeItem.CustInt2 == 0)
                             {
                                 tooltip = "Works for linked items " +
                                     "regardless of layer.";
                             }
-                            else if (activeItem.custInt2 == 1)
+                            else if (activeItem.CustInt2 == 1)
                             {
                                 tooltip = "Works for linked items on the " +
                                     "same layer only.";
                             }
                             break;
                         case Type.Filter:
-                            if (activeItem.custInt2 == 0)
+                            if (activeItem.CustInt2 == 0)
                             {
                                 tooltip = "Objects can pass through.";
                             }
-                            else if (activeItem.custInt2 == 1)
+                            else if (activeItem.CustInt2 == 1)
                             {
                                 tooltip = "Objects can not pass through.";
                             }
                             break;
                         case Type.Gate:
-                            if (activeItem.custInt2 == 0)
+                            if (activeItem.CustInt2 == 0)
                             {
                                 tooltip = "Is not solid.";
                             }
-                            else if (activeItem.custInt2 == 1)
+                            else if (activeItem.CustInt2 == 1)
                             {
                                 tooltip = "Is solid.";
                             }
                             break;
                         case Type.Teleporter:
                             tooltip = "Teleport channel: " +
-                                activeItem.custInt2 + ". Senders link to " +
+                                activeItem.CustInt2 + ". Senders link to " +
                                 "receivers on the same channel to function.";
                             break;
                         case Type.Turret:
                             tooltip = "bullet speed: " +
-                                activeItem.custInt2 + ".";
+                                activeItem.CustInt2 + ".";
                             break;
                     }
                 }
                 #endregion
                 #region Handles CustStr (custom string)
-                else if (bttnText.isHovered && bttnText.isVisible)
+                else if (bttnText.IsHovered && bttnText.IsVisible)
                 {
-                    if (activeItem.custStr.Length == 0)
+                    if (activeItem.CustStr.Length == 0)
                     {
                         tooltip = "Type text while hovered over button for " +
                             "custom text.";
                     }
                     else
                     {
-                        tooltip = activeItem.custStr;
+                        tooltip = activeItem.CustStr;
                     }
                 }
                 #endregion
                 #region Handles IsEnabled.
-                else if (bttnIsEnabled.isHovered && bttnIsEnabled.isVisible)
+                else if (bttnIsEnabled.IsHovered && bttnIsEnabled.IsVisible)
                 {
-                    if (activeItem.isEnabled)
+                    if (activeItem.IsEnabled)
                     {
                         tooltip = "Block is enabled.";
                     }
@@ -2037,15 +2031,15 @@ namespace EnduranceTheMaze
             foreach (ImgBlock item in items)
             {
                 GameObj block = Utils.BlockFromType(game,
-                    item.type, item.x, item.y, item.layer);
-                block.actionIndex = item.actionIndex;
-                block.actionIndex2 = item.actionIndex2;
-                block.actionType = item.actionType;
-                block.custInt1 = item.custInt1;
-                block.custInt2 = item.custInt2;
-                block.custStr = item.custStr;
-                block.dir = item.dir;
-                block.isEnabled = item.isEnabled;
+                    item.BlockType, item.X, item.Y, item.Layer);
+                block.ActionIndex = item.ActionIndex;
+                block.ActionIndex2 = item.ActionIndex2;
+                block.ActionType = item.ActionType;
+                block.CustInt1 = item.CustInt1;
+                block.CustInt2 = item.CustInt2;
+                block.CustStr = item.CustStr;
+                block.BlockDir = item.BlockDir;
+                block.IsEnabled = item.IsEnabled;
                 items2.Add(block);
             }
 
@@ -2139,15 +2133,15 @@ namespace EnduranceTheMaze
                             //Creates and adds the block with the values.
                             tempBlock = new ImgBlock(game, tempType,
                                 tempX, tempY, tempLayer);
-                            tempBlock.actionIndex = tempAInd;
-                            tempBlock.actionIndex2 = tempAInd2;
-                            tempBlock.actionType = tempAType;
-                            tempBlock.custInt1 = tempInt1;
-                            tempBlock.custInt2 = tempInt2;
-                            tempBlock.dir = (Dir)Enum.Parse(typeof(Dir),
+                            tempBlock.ActionIndex = tempAInd;
+                            tempBlock.ActionIndex2 = tempAInd2;
+                            tempBlock.ActionType = tempAType;
+                            tempBlock.CustInt1 = tempInt1;
+                            tempBlock.CustInt2 = tempInt2;
+                            tempBlock.BlockDir = (Dir)Enum.Parse(typeof(Dir),
                                 strBlock[10]);
-                            tempBlock.isEnabled = tempEnabled;
-                            tempBlock.custStr =
+                            tempBlock.IsEnabled = tempEnabled;
+                            tempBlock.CustStr =
                                 strBlock[12].Replace("\t", ",");
                             items.Add(tempBlock);
 
@@ -2217,18 +2211,18 @@ namespace EnduranceTheMaze
                     foreach (ImgBlock item in game.mngrEditor.items)
                     {
                         txtWrite.Write("blk,");
-                        txtWrite.Write((int)item.type + ",");
-                        txtWrite.Write(item.x + ",");
-                        txtWrite.Write(item.y + ",");
-                        txtWrite.Write(item.layer + ",");
-                        txtWrite.Write(item.actionIndex + ",");
-                        txtWrite.Write(item.actionIndex2 + ",");
-                        txtWrite.Write(item.actionType + ",");
-                        txtWrite.Write(item.custInt1 + ",");
-                        txtWrite.Write(item.custInt2 + ",");
-                        txtWrite.Write(item.dir + ",");
-                        txtWrite.Write(item.isEnabled + ",");
-                        txtWrite.Write(item.custStr.Replace(",", "\t") + "|");
+                        txtWrite.Write((int)item.BlockType + ",");
+                        txtWrite.Write(item.X + ",");
+                        txtWrite.Write(item.Y + ",");
+                        txtWrite.Write(item.Layer + ",");
+                        txtWrite.Write(item.ActionIndex + ",");
+                        txtWrite.Write(item.ActionIndex2 + ",");
+                        txtWrite.Write(item.ActionType + ",");
+                        txtWrite.Write(item.CustInt1 + ",");
+                        txtWrite.Write(item.CustInt2 + ",");
+                        txtWrite.Write(item.BlockDir + ",");
+                        txtWrite.Write(item.IsEnabled + ",");
+                        txtWrite.Write(item.CustStr.Replace(",", "\t") + "|");
                     }
 
                     //Closes resources.

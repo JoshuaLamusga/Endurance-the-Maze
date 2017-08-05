@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -30,7 +26,7 @@ namespace EnduranceTheMaze
     {
         //Relevant assets.
         public static SoundEffect sndActivateAuto;
-        public static Texture2D texEAuto { get; private set; }
+        public static Texture2D TexEAuto { get; private set; }
 
         //Sprite information.
         private SpriteAtlas spriteAtlas;
@@ -47,17 +43,17 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.EAuto;
-            isSolid = true;
+            BlockType = Type.EAuto;
+            IsSolid = true;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texEAuto);
-            sprite.depth = 0.417f;
+            BlockSprite = new Sprite(true, TexEAuto);
+            BlockSprite.depth = 0.417f;
             //Note that there are actually 6 frames.
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 3, 2, 3);
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 3, 2, 3);
 
             //Sets custom variables.
-            timer = custInt1; //Sets the timer to the max value.
+            timer = CustInt1; //Sets the timer to the max value.
             hasActivated = false; //The switch hasn't activated yet.
         }
 
@@ -68,7 +64,7 @@ namespace EnduranceTheMaze
         public static void LoadContent(ContentManager Content)
         {
             sndActivateAuto = Content.Load<SoundEffect>("Content/Sounds/sndActivateAuto");
-            texEAuto = Content.Load<Texture2D>("Content/Sprites/Game/sprEAuto");
+            TexEAuto = Content.Load<Texture2D>("Content/Sprites/Game/sprEAuto");
         }
 
         /// <summary>
@@ -77,18 +73,18 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeEAuto newBlock = new MazeEAuto(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeEAuto newBlock = new MazeEAuto(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets custom variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -103,7 +99,7 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             #region Adjusts sprite.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 spriteAtlas.frameSpeed = 0.2f;
             }
@@ -114,52 +110,52 @@ namespace EnduranceTheMaze
             #endregion
 
             //Counts down the timer and activates at zero.
-            if (isEnabled)
+            if (IsEnabled)
             {
                 timer--;
-                if (timer <= 0 && custInt1 > 0)
+                if (timer <= 0 && CustInt1 > 0)
                 {
-                    timer = custInt1;
-                    isActivated = true;
+                    timer = CustInt1;
+                    IsActivated = true;
                 }
 
                 //Handles automated activation.
-                if (isActivated && actionType > 4)
+                if (IsActivated && ActionType > 4)
                 {
                     //Deactivates the item and plays a sound.
-                    isActivated = false;
+                    IsActivated = false;
                     hasActivated = true;
-                    game.playlist.Play(sndActivateAuto, x, y);
+                    game.playlist.Play(sndActivateAuto, X, Y);
 
                     //Gets all items matching the index to affect.
                     List<GameObj> items = game.mngrLvl.items.Where(o =>
-                        o.actionIndex == actionIndex2).ToList();
+                        o.ActionIndex == ActionIndex2).ToList();
 
                     //Filters out blocks on different layers.
-                    if (custInt2 == 1)
+                    if (CustInt2 == 1)
                     {
-                        items = items.Where(o => o.layer == layer).ToList();
+                        items = items.Where(o => o.Layer == Layer).ToList();
                     }
 
-                    if (actionType == 5)
+                    if (ActionType == 5)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = true;
+                            item.IsActivated = true;
                         }
                     }
-                    else if (actionType == 6)
+                    else if (ActionType == 6)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = false;
+                            item.IsActivated = false;
                         }
                     }
-                    else if (actionType == 7)
+                    else if (ActionType == 7)
                     {
                         foreach (GameObj item in items)
                         {
-                            item.isActivated = !item.isActivated;
+                            item.IsActivated = !item.IsActivated;
                         }
                     }
                 }
@@ -189,15 +185,15 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "E-auto ";
 
-                if (custInt1 != 0)
+                if (CustInt1 != 0)
                 {
-                    game.mngrLvl.tooltip += "(triggers every " + custInt1 +
+                    game.mngrLvl.tooltip += "(triggers every " + CustInt1 +
                         " frames.) ";
                 }
 

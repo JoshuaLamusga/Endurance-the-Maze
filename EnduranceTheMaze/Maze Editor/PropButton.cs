@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace EnduranceTheMaze
 {
@@ -15,37 +10,37 @@ namespace EnduranceTheMaze
     public class PropButton
     {
         //Relevant assets.
-        public static Texture2D texPropActionInd1 { get; private set; }
-        public static Texture2D texPropActionInd2 { get; private set; }
-        public static Texture2D texPropActionType { get; private set; }
-        public static Texture2D texPropCustInt1 { get; private set; }
-        public static Texture2D texPropCustInt2 { get; private set; }
-        public static Texture2D texPropCustStr { get; private set; }
-        public static Texture2D texPropDir { get; private set; }
-        public static Texture2D texPropIsEnabled { get; private set; }
+        public static Texture2D TexPropActionInd1 { get; private set; }
+        public static Texture2D TexPropActionInd2 { get; private set; }
+        public static Texture2D TexPropActionType { get; private set; }
+        public static Texture2D TexPropCustInt1 { get; private set; }
+        public static Texture2D TexPropCustInt2 { get; private set; }
+        public static Texture2D TexPropCustStr { get; private set; }
+        public static Texture2D TexPropDir { get; private set; }
+        public static Texture2D TexPropIsEnabled { get; private set; }
 
-        public static Texture2D texOpGameDelay { get; private set; }
-        public static Texture2D texOpLvlLink { get; private set; }
-        public static Texture2D texOpMaxSteps { get; private set; }
-        public static Texture2D texOpMinGoals { get; private set; }
-        public static Texture2D texOpSyncActors { get; private set; }
-        public static Texture2D texOpSyncDeath { get; private set; }
+        public static Texture2D TexOpGameDelay { get; private set; }
+        public static Texture2D TexOpLvlLink { get; private set; }
+        public static Texture2D TexOpMaxSteps { get; private set; }
+        public static Texture2D TexOpMinGoals { get; private set; }
+        public static Texture2D TexOpSyncActors { get; private set; }
+        public static Texture2D TexOpSyncDeath { get; private set; }
 
         //Refers to the game instance.
         protected MainLoop game;
 
         //Contains a sprite and atlas.
-        public Sprite sprite { get; protected set; }
+        public Sprite BttnSprite { get; protected set; }
 
         //Object location in pixels.
-        public Vector2 pos { get; private set; }
+        public Vector2 Pos { get; private set; }
 
         //If the button is hovered or clicked.
-        public bool isHovered { get; private set; }
+        public bool IsHovered { get; private set; }
 
         //If the button is visible (buttons are invisible when the active item
         //cannot make use of them).
-        public bool isVisible { get; internal set; }
+        public bool IsVisible { get; internal set; }
 
         /// <summary>
         /// Sets all values.
@@ -58,9 +53,9 @@ namespace EnduranceTheMaze
             this.game = game;
 
             //Sets default values.
-            this.sprite = sprite;
-            this.pos = pos;            
-            isHovered = false;
+            this.BttnSprite = sprite;
+            this.Pos = pos;            
+            IsHovered = false;
 
             //Sets the sprite position.
             sprite.rectDest.X = pos.X;
@@ -72,20 +67,20 @@ namespace EnduranceTheMaze
         /// </summary>
         public static void LoadContent(ContentManager Content)
         {
-            texPropActionInd1 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionInd1");
-            texPropActionInd2 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionInd2");
-            texPropActionType = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionType");
-            texPropCustInt1 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustInt1");
-            texPropCustInt2 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustInt2");
-            texPropCustStr = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustStr");
-            texPropDir = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropDir");
-            texPropIsEnabled = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropIsEnabled");
-            texOpGameDelay = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpGameDelay");
-            texOpLvlLink = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpLvlLink");
-            texOpMaxSteps = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpMaxSteps");
-            texOpMinGoals = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpMinGoals");
-            texOpSyncActors = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpSyncActors");
-            texOpSyncDeath = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpSyncDeath");
+            TexPropActionInd1 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionInd1");
+            TexPropActionInd2 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionInd2");
+            TexPropActionType = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropActionType");
+            TexPropCustInt1 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustInt1");
+            TexPropCustInt2 = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustInt2");
+            TexPropCustStr = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropCustStr");
+            TexPropDir = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropDir");
+            TexPropIsEnabled = Content.Load<Texture2D>("Content/Sprites/Gui/sprPropIsEnabled");
+            TexOpGameDelay = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpGameDelay");
+            TexOpLvlLink = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpLvlLink");
+            TexOpMaxSteps = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpMaxSteps");
+            TexOpMinGoals = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpMinGoals");
+            TexOpSyncActors = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpSyncActors");
+            TexOpSyncDeath = Content.Load<Texture2D>("Content/Sprites/Gui/sprOpSyncDeath");
         }
 
         /// <summary>
@@ -94,14 +89,14 @@ namespace EnduranceTheMaze
         public virtual void Update()
         {
             //If hovered, sets hovered to true. Else, sets it to false.
-            if (game.MsState.X >= pos.X && game.MsState.X <= pos.X + 32 &&
-                game.MsState.Y >= pos.Y && game.MsState.Y <= pos.Y + 32)
+            if (game.MsState.X >= Pos.X && game.MsState.X <= Pos.X + 32 &&
+                game.MsState.Y >= Pos.Y && game.MsState.Y <= Pos.Y + 32)
             {
-                isHovered = true;
+                IsHovered = true;
             }
             else
             {
-                isHovered = false;
+                IsHovered = false;
             }
         }
 
@@ -110,16 +105,16 @@ namespace EnduranceTheMaze
         /// </summary>
         public virtual void Draw()
         {
-            if (isHovered)
+            if (IsHovered)
             {
-                sprite.color = Color.LightGreen;
+                BttnSprite.color = Color.LightGreen;
             }
             else
             {
-                sprite.color = Color.White;
+                BttnSprite.color = Color.White;
             }
 
-            sprite.Draw(game.GameSpriteBatch);
+            BttnSprite.Draw(game.GameSpriteBatch);
         }
     }
 }

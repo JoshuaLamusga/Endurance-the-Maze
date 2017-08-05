@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -22,7 +18,7 @@ namespace EnduranceTheMaze
     public class MazeCheckpoint : GameObj
     {
         //Relevant assets.
-        public static Texture2D texCheckpoint { get; private set; }
+        public static Texture2D TexCheckpoint { get; private set; }
 
         //Sprite information.    
         private SpriteAtlas spriteAtlas;
@@ -38,12 +34,12 @@ namespace EnduranceTheMaze
             : base(game, x, y, layer)
         {
             //Sets default values.
-            type = Type.Checkpoint;
+            BlockType = Type.Checkpoint;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texCheckpoint);
-            sprite.depth = 0.208f;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 19, 2, 10);
+            BlockSprite = new Sprite(true, TexCheckpoint);
+            BlockSprite.depth = 0.208f;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
             spriteAtlas.frameSpeed = 0.35f;
         }
 
@@ -53,7 +49,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texCheckpoint = Content.Load<Texture2D>("Content/Sprites/Game/sprCheckpoint");
+            TexCheckpoint = Content.Load<Texture2D>("Content/Sprites/Game/sprCheckpoint");
         }
 
         /// <summary>
@@ -62,21 +58,21 @@ namespace EnduranceTheMaze
         public override GameObj Clone()
         {
             //Sets common variables.
-            MazeCheckpoint newBlock = new MazeCheckpoint(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+            MazeCheckpoint newBlock = new MazeCheckpoint(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Custom variables.
-            newBlock.sprite = sprite;
+            newBlock.BlockSprite = BlockSprite;
             newBlock.hasActivated = hasActivated;
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
             return newBlock;
@@ -89,8 +85,8 @@ namespace EnduranceTheMaze
         {
             //Gets a list of all actors in the same position.
             List<GameObj> items = game.mngrLvl.items.Where(o =>
-                o.x == x && o.y == y && o.layer == layer &&
-                o.type == Type.Actor).ToList();
+                o.X == X && o.Y == Y && o.Layer == Layer &&
+                o.BlockType == Type.Actor).ToList();
 
             if (items.Count > 0) //Attempts to save.
             {
@@ -98,7 +94,7 @@ namespace EnduranceTheMaze
                 {
                     game.mngrLvl.doCheckpoint = true;
 
-                    if (custInt1 == 1)
+                    if (CustInt1 == 1)
                     {
                         game.mngrLvl.RemoveItem(this);
                     }
@@ -123,17 +119,17 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display information on hover.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Checkpoint";
                 
-                if (custInt1 == 1)
+                if (CustInt1 == 1)
                 {
                     game.mngrLvl.tooltip += "(disappears on touch)";
                 }
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }

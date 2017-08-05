@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -27,8 +21,8 @@ namespace EnduranceTheMaze
         public TitleItemCmpgn(MainLoop game, Texture2D tex, float xPos,
             float yPos, int frame) : base(game, tex, xPos, yPos, frame)
         {
-            spriteAtlas = new SpriteAtlas(sprite, 96, 96, 8, 2, 4);
-            spriteAtlas.frame = frame;
+            BttnSpriteAtlas = new SpriteAtlas(BttnSprite, 96, 96, 8, 2, 4);
+            BttnSpriteAtlas.frame = frame;
         }
 
         /// <summary>

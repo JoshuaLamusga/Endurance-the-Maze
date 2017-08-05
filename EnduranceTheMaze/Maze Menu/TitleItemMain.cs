@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace EnduranceTheMaze
 {
@@ -23,11 +18,11 @@ namespace EnduranceTheMaze
         private MainLoop game;
 
         //The button image and atlas.
-        public Sprite sprite { get; protected set; }
-        public SpriteAtlas spriteAtlas { get; protected set; }
+        public Sprite BttnSprite { get; protected set; }
+        public SpriteAtlas BttnSpriteAtlas { get; protected set; }
 
         //If the button is hovered or clicked.
-        public bool isHovered { get; protected set; }
+        public bool IsHovered { get; protected set; }
         public bool isClicked;
 
         /// <summary>
@@ -47,17 +42,17 @@ namespace EnduranceTheMaze
             this.game = game;
 
             //Sets up detectors.
-            isHovered = false;
+            IsHovered = false;
             isClicked = false;
 
             //Sets up the relevant sprite.
-            sprite = new Sprite(true, tex);
-            sprite.rectDest.X = xPos;
-            sprite.rectDest.Y = yPos;
-            sprite.drawBehavior = SpriteDraw.all;
+            BttnSprite = new Sprite(true, tex);
+            BttnSprite.rectDest.X = xPos;
+            BttnSprite.rectDest.Y = yPos;
+            BttnSprite.drawBehavior = SpriteDraw.all;
 
-            spriteAtlas = new SpriteAtlas(sprite, 133, 28, 10, 2, 5);
-            spriteAtlas.frame = frame;
+            BttnSpriteAtlas = new SpriteAtlas(BttnSprite, 133, 28, 10, 2, 5);
+            BttnSpriteAtlas.frame = frame;
         }
 
         /// <summary>
@@ -78,26 +73,26 @@ namespace EnduranceTheMaze
         public void Update()
         {
             //If the mouse becomes hovered.
-            if (Sprite.isIntersecting(sprite, new SmoothRect(
+            if (Sprite.IsIntersecting(BttnSprite, new SmoothRect(
                 game.MsState.X, game.MsState.Y, 1, 1)))
             {
-                if (!isHovered)
+                if (!IsHovered)
                 {
-                    isHovered = true;
+                    IsHovered = true;
 
                     //Intentional truncation.
-                    spriteAtlas.frame += spriteAtlas.atlasCols;
+                    BttnSpriteAtlas.frame += BttnSpriteAtlas.atlasCols;
                     SfxPlaylist.Play(sndBttnHover);
                 }
             }
             //If the mouse is no longer hovered.
-            else if (isHovered)
+            else if (IsHovered)
             {
-                isHovered = false;
-                spriteAtlas.frame -= spriteAtlas.atlasCols;
+                IsHovered = false;
+                BttnSpriteAtlas.frame -= BttnSpriteAtlas.atlasCols;
             }
             //If the mouse is hovered and clicked.
-            if (isHovered && game.MsStateOld.LeftButton ==
+            if (IsHovered && game.MsStateOld.LeftButton ==
                 ButtonState.Released && game.MsState.LeftButton ==
                 ButtonState.Pressed)
             {
@@ -105,7 +100,7 @@ namespace EnduranceTheMaze
                 SfxPlaylist.Play(sndBttnClick);
             }
 
-            spriteAtlas.Update(true); //updates the atlas.
+            BttnSpriteAtlas.Update(true); //updates the atlas.
         }
 
         /// <summary>
@@ -113,7 +108,7 @@ namespace EnduranceTheMaze
         /// </summary>
         public void Draw()
         {
-            sprite.Draw(game.GameSpriteBatch);
+            BttnSprite.Draw(game.GameSpriteBatch);
         }
     }
 }

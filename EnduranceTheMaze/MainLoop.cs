@@ -195,12 +195,12 @@ namespace EnduranceTheMaze
                 GmState == GameState.stateGameplayEditor)
             {
                 GameSpriteBatch.Begin(SpriteSortMode.Deferred, null, null,
-                    null, null, null, mngrLvl.camera);
+                    null, null, null, mngrLvl.Camera);
             }
             else if (GmState == GameState.stateEditor)
             {
                 GameSpriteBatch.Begin(SpriteSortMode.Deferred, null, null,
-                    null, null, null, mngrEditor.camera);
+                    null, null, null, mngrEditor.Camera);
             }
             else
             {

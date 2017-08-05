@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 
 namespace EnduranceTheMaze
 {
@@ -25,7 +19,7 @@ namespace EnduranceTheMaze
     public class MazeMirror : GameObj
     {
         //Relevant assets.
-        public static Texture2D texMirror { get; private set; }
+        public static Texture2D TexMirror { get; private set; }
 
         //Sprite information.
         private SpriteAtlas spriteAtlas;
@@ -38,14 +32,14 @@ namespace EnduranceTheMaze
             base(game, x, y, layer)
         {
             //Sets default values.
-            isSolid = true;
-            type = Type.Mirror;
+            IsSolid = true;
+            BlockType = Type.Mirror;
 
             //Sets sprite information.
-            sprite = new Sprite(true, texMirror);
-            sprite.depth = 0.420f;
-            sprite.drawBehavior = SpriteDraw.all;
-            spriteAtlas = new SpriteAtlas(sprite, 32, 32, 4, 1, 4);
+            BlockSprite = new Sprite(true, TexMirror);
+            BlockSprite.depth = 0.420f;
+            BlockSprite.drawBehavior = SpriteDraw.all;
+            spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 4, 1, 4);
         }
 
         /// <summary>
@@ -54,7 +48,7 @@ namespace EnduranceTheMaze
         /// <param name="Content">A game content loader.</param>
         public static void LoadContent(ContentManager Content)
         {
-            texMirror = Content.Load<Texture2D>("Content/Sprites/Game/sprMirror");
+            TexMirror = Content.Load<Texture2D>("Content/Sprites/Game/sprMirror");
         }
 
         /// <summary>
@@ -64,18 +58,18 @@ namespace EnduranceTheMaze
         {
             //Sets common variables.
             MazeMirror newBlock =
-                new MazeMirror(game, x, y, layer);
-            newBlock.actionIndex = actionIndex;
-            newBlock.actionIndex2 = actionIndex2;
-            newBlock.actionType = actionType;
-            newBlock.custInt1 = custInt1;
-            newBlock.custInt2 = custInt2;
-            newBlock.custStr = custStr;
-            newBlock.dir = dir;
-            newBlock.isActivated = isActivated;
-            newBlock.isEnabled = isEnabled;
-            newBlock.isVisible = isVisible;
-            newBlock.sprite = sprite;
+                new MazeMirror(game, X, Y, Layer);
+            newBlock.ActionIndex = ActionIndex;
+            newBlock.ActionIndex2 = ActionIndex2;
+            newBlock.ActionType = ActionType;
+            newBlock.CustInt1 = CustInt1;
+            newBlock.CustInt2 = CustInt2;
+            newBlock.CustStr = CustStr;
+            newBlock.BlockDir = BlockDir;
+            newBlock.IsActivated = IsActivated;
+            newBlock.IsEnabled = IsEnabled;
+            newBlock.IsVisible = IsVisible;
+            newBlock.BlockSprite = BlockSprite;
 
             //Sets specific variables.
             newBlock.spriteAtlas = new SpriteAtlas(spriteAtlas, false);
@@ -88,19 +82,19 @@ namespace EnduranceTheMaze
         public override void Update()
         {
             #region Determines sprite by dir and isEnabled.
-            if (dir == Dir.Right)
+            if (BlockDir == Dir.Right)
             {
                 spriteAtlas.frame = 0;
             }
-            else if (dir == Dir.Down)
+            else if (BlockDir == Dir.Down)
             {
                 spriteAtlas.frame = 1;
             }
-            else if (dir == Dir.Left)
+            else if (BlockDir == Dir.Left)
             {
                 spriteAtlas.frame = 2;
             }
-            else if (dir == Dir.Up)
+            else if (BlockDir == Dir.Up)
             {
                 spriteAtlas.frame = 3;
             }
@@ -118,13 +112,13 @@ namespace EnduranceTheMaze
             base.Draw();
 
             //Sets the tooltip to display disabled status and info.
-            if (Sprite.isIntersecting(sprite, new SmoothRect
+            if (Sprite.IsIntersecting(BlockSprite, new SmoothRect
                 (game.mngrLvl.GetCoordsMouse(), 1, 1)) &&
-                layer == game.mngrLvl.actor.layer)
+                Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Mirror";
 
-                if (!isEnabled)
+                if (!IsEnabled)
                 {
                     game.mngrLvl.tooltip += "(disabled)";
                 }
