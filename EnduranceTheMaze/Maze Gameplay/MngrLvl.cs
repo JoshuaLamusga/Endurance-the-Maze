@@ -570,6 +570,22 @@ namespace EnduranceTheMaze
                 return;
             }
 
+            //Tabs through the active actors.
+            if (game.KbState.IsKeyDown(Keys.Tab) &&
+                game.KbStateOld.IsKeyUp(Keys.Tab) &&
+                !opSyncActors)
+            {
+                var actors = items.Where(o => o.BlockType == Type.Actor).ToList();
+                if (actors.IndexOf(actor) < actors.Count - 1)
+                {
+                    actor = (MazeActor)actors[actors.IndexOf(actor) + 1];
+                }
+                else if (actors.Count > 0)
+                {
+                    actor = (MazeActor)actors.First();
+                }
+            }
+
             //Updates the timer.
             _countdown--;
             if (_countdown == 0)
