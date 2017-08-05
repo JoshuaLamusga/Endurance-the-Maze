@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace EnduranceTheMaze
 {
@@ -92,6 +93,26 @@ namespace EnduranceTheMaze
                 Layer == game.mngrLvl.actor.Layer)
             {
                 game.mngrLvl.tooltip += "Coin Lock | ";
+            }
+
+            //Draws the number of coins required (in green if you have them).
+            if (game.mngrLvl.ActorCoins >= CustInt1)
+            {
+                Vector2 position = game.fntBold.MeasureString(CustInt1.ToString()) / 2;
+
+                game.GameSpriteBatch.DrawString(game.fntBold,
+                    CustInt1.ToString(),
+                    new Vector2(X * 32 + 16 - position.X, Y * 32 + 16 - position.Y),
+                    Color.Lime);
+            }
+            else
+            {
+                Vector2 position = game.fntBold.MeasureString(CustInt1.ToString()) / 2;
+
+                game.GameSpriteBatch.DrawString(game.fntBold,
+                    CustInt1.ToString(),
+                    new Vector2(X * 32 + 16 - position.X, Y * 32 + 16 - position.Y),
+                    Color.Red);
             }
         }
     }
