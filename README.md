@@ -1,4 +1,4 @@
-# Endurance the Maze
+# Endurance: The Maze
 This is a 2-D maze game for Windows (written in C# MonoGame) where each level is made in a level editor supporting an infinite grid with infinite layers up and down. You control a character that must reach the finish line to complete each level.
 
 Players, see the [User Documentation](https://github.com/JoshuaLamusga/Endurance-The-Maze/wiki/User-Documentation).  
