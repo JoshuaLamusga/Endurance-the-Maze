@@ -166,7 +166,7 @@ namespace EnduranceTheMaze
                 case Type.Belt:
                     BlockSprite = new Sprite(true, MazeBelt.TexBelt);
                     BlockSprite.depth = 0.401f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 9, 1, 9);
                     BlockSpriteAtlas.CenterOrigin();
@@ -303,7 +303,7 @@ namespace EnduranceTheMaze
                     BlockSprite.depth = 0.415f;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 64, 32, 3, 1, 3);
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.origin.X = 16;
                     BlockSprite.origin.Y = 16;
                     #region Adjusts sprite.
@@ -336,7 +336,7 @@ namespace EnduranceTheMaze
                 case Type.Filter:
                     BlockSprite = new Sprite(true, MazeFilter.TexFilter);
                     BlockSprite.depth = 0.405f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
                     BlockSpriteAtlas.CenterOrigin();
@@ -363,7 +363,7 @@ namespace EnduranceTheMaze
                 case Type.Freeze:
                     BlockSprite = new Sprite(true, MazeFreeze.TexFreeze);
                     BlockSprite.depth = 0.203f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 10, 1, 10);
                     BlockSpriteAtlas.frameSpeed = 0.4f;
@@ -381,7 +381,7 @@ namespace EnduranceTheMaze
                 case Type.Goal:
                     BlockSprite = new Sprite(true, MazeGoal.TexGoal);
                     BlockSprite.depth = 0.202f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 9, 1, 9);
                     BlockSpriteAtlas.frameSpeed = 0.2f;
@@ -508,7 +508,7 @@ namespace EnduranceTheMaze
                 case Type.MultiWay:
                     BlockSprite = new Sprite(true, MazeMultiWay.TexMultiWay);
                     BlockSprite.depth = 0.408f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 4, 1, 4);
                     BlockSpriteAtlas.CenterOrigin();
@@ -555,7 +555,7 @@ namespace EnduranceTheMaze
                 case Type.Rotate:
                     BlockSprite = new Sprite(true, MazeRotate.TexRotate);
                     BlockSprite.depth = 0.418f;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSprite.drawBehavior = SpriteDraw.all;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 2, 1, 2);
                     BlockSpriteAtlas.CenterOrigin();
@@ -602,7 +602,7 @@ namespace EnduranceTheMaze
                     BlockSprite = new Sprite(true, MazeSpike.TexSpike);
                     BlockSprite.depth = 0.409f;
                     BlockSprite.drawBehavior = SpriteDraw.all;
-                    BlockSprite.originOffset = true;
+                    BlockSprite.doDrawOffset = true;
                     BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 19, 2, 10);
                     BlockSpriteAtlas.frameSpeed = 0.2f;
                     BlockSpriteAtlas.CenterOrigin();

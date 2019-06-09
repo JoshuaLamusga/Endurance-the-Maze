@@ -34,7 +34,7 @@ namespace EnduranceTheMaze
             //Sets sprite information.
             BlockSprite = new Sprite(true, TexBelt);
             BlockSprite.depth = 0.401f;
-            BlockSprite.originOffset = true;
+            BlockSprite.doDrawOffset = true;
             BlockSprite.drawBehavior = SpriteDraw.all;
 
             //Custom variables.

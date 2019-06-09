@@ -126,8 +126,8 @@
     <EmbeddedResource Include="Levels\LvlEasy2.lvl" />
     <EmbeddedResource Include="Levels\LvlHard1.lvl" />
     <EmbeddedResource Include="Levels\LvlHard2.lvl" />
-    <EmbeddedResource Include="Levels\LvlHard3.lvl" />
     <EmbeddedResource Include="Levels\LvlHard4.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard5.lvl" />
     <EmbeddedResource Include="Levels\LvlNormal1.lvl" />
     <EmbeddedResource Include="Levels\LvlNormal2.lvl" />
     <EmbeddedResource Include="Levels\LvlNormal3.lvl" />
@@ -135,6 +135,7 @@
     <EmbeddedResource Include="Levels\LvlNormal5.lvl" />
     <EmbeddedResource Include="Levels\LvlNormal6.lvl" />
     <EmbeddedResource Include="Levels\LvlNormal7.lvl" />
+    <EmbeddedResource Include="Levels\LvlHard3.lvl" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

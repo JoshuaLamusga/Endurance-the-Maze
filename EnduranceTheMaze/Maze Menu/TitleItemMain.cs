@@ -92,8 +92,8 @@ namespace EnduranceTheMaze
                 BttnSpriteAtlas.frame -= BttnSpriteAtlas.atlasCols;
             }
             //If the mouse is hovered and clicked.
-            if (IsHovered && game.MsStateOld.LeftButton ==
-                ButtonState.Released && game.MsState.LeftButton ==
+            if (IsHovered && game.MsState.LeftButton ==
+                ButtonState.Released && game.MsStateOld.LeftButton ==
                 ButtonState.Pressed)
             {
                 isClicked = true;

@@ -8,8 +8,75 @@ namespace EnduranceTheMaze
     /// </summary>
     public class SmoothRect : IEquatable<SmoothRect>
     {
+        #region Members
         public float X, Y, Width, Height;
+        #endregion
 
+        #region Properties
+        /// <summary>
+        /// The first Y coordinate.
+        /// </summary>
+        public float Top
+        {
+            get
+            {
+                return Y;
+            }
+        }
+
+        /// <summary>
+        /// The second Y coordinate.
+        /// </summary>
+        public float Bottom
+        {
+            get
+            {
+                return Y + Height;
+            }
+        }
+
+        /// <summary>
+        /// The first X coordinate.
+        /// </summary>
+        public float Left
+        {
+            get
+            {
+                return X;
+            }
+        }
+
+        /// <summary>
+        /// The second X coordinate.
+        /// </summary>
+        public float Right
+        {
+            get
+            {
+                return X + Width;
+            }
+        }
+
+        /// <summary>
+        /// The X and Y coordinates.
+        /// </summary>
+        public Vector2 Position
+        {
+            get
+            {
+                return new Vector2(X, Y);
+            }
+        }
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a rectangle from a position and dimensions.
+        /// </summary>
+        /// <param name="X">The x-coordinate.</param>
+        /// <param name="Y">The y-coordinate.</param>
+        /// <param name="Width">The width of the rectangle.</param>
+        /// <param name="Height">The height of the rectangle.</param>
         public SmoothRect(float X, float Y, float Width, float Height)
         {
             this.X = X;
@@ -18,6 +85,12 @@ namespace EnduranceTheMaze
             this.Height = Height;
         }
 
+        /// <summary>
+        /// Creates a rectangle from a position and dimensions.
+        /// </summary>
+        /// <param name="pos">The X and Y coordinates.</param>
+        /// <param name="Width">The width of the rectangle.</param>
+        /// <param name="Height">The height of the rectangle.</param>
         public SmoothRect(Vector2 pos, float Width, float Height)
         {
             X = pos.X;
@@ -26,6 +99,9 @@ namespace EnduranceTheMaze
             this.Height = Height;
         }
 
+        /// <summary>
+        /// Clone constructor.
+        /// </summary>
         public SmoothRect(SmoothRect rect)
         {
             X = rect.X;
@@ -33,50 +109,9 @@ namespace EnduranceTheMaze
             Width = rect.Width;
             Height = rect.Height;
         }
+        #endregion
 
-        public float Top
-        {
-            get
-            {
-                return Y;
-            }
-        }
-        public float Bottom
-        {
-            get
-            {
-                return Y + Height;
-            }
-        }
-        public float Left
-        {
-            get
-            {
-                return X;
-            }
-        }
-        public float Right
-        {
-            get
-            {
-                return X + Width;
-            }
-        }
-        public Vector2 Position
-        {
-            get
-            {
-                return new Vector2(X, Y);
-            }
-        }
-        public static SmoothRect Empty
-        {
-            get
-            {
-                return new SmoothRect(0, 0, 0, 0);
-            }
-        }
-
+        #region Methods
         /// <summary>
         /// Determines whether the specified Object is equivalent.
         /// </summary>
@@ -102,6 +137,19 @@ namespace EnduranceTheMaze
         public Rectangle ToRect()
         {
             return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        }
+        #endregion
+
+        #region Static Methods
+        /// <summary>
+        /// An empty rectangle with all values set to zero.
+        /// </summary>
+        public static SmoothRect Empty
+        {
+            get
+            {
+                return new SmoothRect(0, 0, 0, 0);
+            }
         }
 
         /// <summary>
@@ -140,8 +188,9 @@ namespace EnduranceTheMaze
             {
                 return true;
             }
-            
+
             return false;
         }
+        #endregion
     }
 }
