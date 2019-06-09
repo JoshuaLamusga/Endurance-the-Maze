@@ -37,7 +37,7 @@ namespace EnduranceTheMaze
             //Sets sprite information.
             BlockSprite = new Sprite(true, TexGoal);
             BlockSprite.depth = 0.202f;
-            BlockSprite.originOffset = true;
+            BlockSprite.doDrawOffset = true;
             BlockSprite.drawBehavior = SpriteDraw.all;
             spriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 9, 1, 9);
             spriteAtlas.frameSpeed = 0.2f;

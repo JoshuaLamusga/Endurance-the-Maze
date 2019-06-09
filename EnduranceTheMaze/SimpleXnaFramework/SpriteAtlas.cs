@@ -3,12 +3,26 @@
 namespace EnduranceTheMaze
 {
     /// <summary>
-    /// Defines what happens when a frame end is reached.
-    /// loop: loops the animation.
-    /// end: sets frameSpeed to 0, stopping animation.
-    /// reverse: reverses frameSpeed and animation.
+    /// Defines the animation behavior when acting upon the last frame.
     /// </summary>
-    public enum FrameEnd { loop, end, reverse };
+    public enum FrameEnd
+    {
+        /// <summary>
+        /// The animation continues from the beginning.
+        /// </summary>
+        Loop,
+
+        /// <summary>
+        /// The animation stops playing.
+        /// </summary>
+        End,
+
+        /// <summary>
+        /// The animation reverses direction and continues from its current
+        /// frame.
+        /// </summary>
+        Reverse
+    };
 
     /// <summary>
     /// Deals with animation using spritesheets.
@@ -16,27 +30,123 @@ namespace EnduranceTheMaze
     /// </summary>
     public class SpriteAtlas
     {
-        Sprite sprite;
-        public double frame = 0; //the current frame.
-        public int frames = 0; //the number of frames        
-        public double frameSpeed = 0; //the frame speed.
-        public FrameEnd frameEndBehavior = FrameEnd.loop;
-        public int frameWidth = 1; //The width of each frame.
-        public int frameHeight = 1; //The height of each frame.
-        public int atlasRows = 1; //The number of total rows.
-        public int atlasCols = 1; //The number of total columns.
-        public int frameOffsetH = 0; //The horizontal offset.
-        public int frameOffsetV = 0; //The vertical offset.
+        #region Members
+        /// <summary>
+        /// The sprite to modify.
+        /// </summary>
+        private Sprite sprite;
 
-        /// <summary>Animates through the given sprite's frames. Sets drawBehavior to basicAnimated if it's "basic".</summary>
-        /// <param name="sprite">The sprite to use (must have a texture defined).</param>
+        /// <summary>
+        /// The current animation frame.
+        /// </summary>
+        public double frame = 0;
+
+        /// <summary>
+        /// The total number of animation frames.
+        /// </summary>
+        public int frames = 0;
+
+        /// <summary>
+        /// The speed that animation frames cycle.
+        /// </summary>
+        public double frameSpeed = 0;
+
+        /// <summary>
+        /// What the animation does when it reaches the end of a frame.
+        /// </summary>
+        public FrameEnd frameEndBehavior = FrameEnd.Loop;
+
+        /// <summary>
+        /// The width of each frame.
+        /// </summary>
+        public int frameWidth = 1;
+
+        /// <summary>
+        /// The height of each frame.
+        /// </summary>
+        public int frameHeight = 1;
+
+        /// <summary>
+        /// The number of total rows in the spritesheet.
+        /// </summary>
+        public int atlasRows = 1;
+
+        /// <summary>
+        /// The number of total columns in the spritesheet.
+        /// </summary>
+        public int atlasCols = 1;
+
+        /// <summary>
+        /// The horizontal offset in pixels between images in the spritesheet.
+        /// </summary>
+        public int frameOffsetH = 0;
+
+        /// <summary>
+        /// The vertical offset in pixels between images in the spritesheet.
+        /// </summary>
+        public int frameOffsetV = 0;
+        #endregion
+
+        /// <summary>
+        /// Animates through the given sprite's frames. drawBehavior is set
+        /// to be at least basicAnimated.
+        /// </summary>
+        /// <param name="sprite">
+        /// The sprite to use (must have a texture defined).
+        /// </param>
         public SpriteAtlas(Sprite sprite)
         {
             this.sprite = sprite;
+
+            //basicAnimated or Animated are required to function.
             if (this.sprite.drawBehavior == SpriteDraw.basic)
             {
                 this.sprite.drawBehavior = SpriteDraw.basicAnimated;
             }
+
+            sprite.rectSrc.Width = frameWidth;
+            sprite.rectSrc.Height = frameHeight;
+            sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
+            sprite.rectDest.Height = frameHeight * this.sprite.scaleY;
+        }
+        
+        /// <summary>
+        /// Animates through the given sprite's frames. drawBehavior is set
+        /// to be at least basicAnimated.
+        /// </summary>
+        /// <param name="sprite">
+        /// The sprite to use (must have a texture defined).
+        /// </param>
+        /// <param name="frameWidth">
+        /// The width of each frame in the texture.
+        /// </param>
+        /// <param name="frameHeight">
+        /// The height of each frame in the texture.
+        /// </param>
+        /// <param name="frames">
+        /// The number of total frames.
+        /// </param>
+        /// <param name="rows">
+        /// The number of rows (vertical frames) in the texture.
+        /// </param>
+        /// <param name="cols">
+        /// The number of columns (side-by-side frames) in the texture.
+        /// </param>
+        public SpriteAtlas(Sprite sprite, int frameWidth, int frameHeight, int frames, int rows, int cols)
+        {
+            this.sprite = sprite;
+
+            //basicAnimated or Animated are required to function.
+            if (this.sprite.drawBehavior == SpriteDraw.basic)
+            {
+                this.sprite.drawBehavior = SpriteDraw.basicAnimated;
+            }
+
+            this.frameWidth = frameWidth;
+            this.frameHeight = frameHeight;
+            this.frames = frames;
+            atlasRows = rows;
+            atlasCols = cols;
             sprite.rectSrc.Width = frameWidth;
             sprite.rectSrc.Height = frameHeight;
             sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
@@ -44,10 +154,56 @@ namespace EnduranceTheMaze
         }
 
         /// <summary>
-        /// Duplicates the values from an existing atlas to make a copy that
-        /// references only the sprite (all other values copied).
+        /// Animates through the given sprite's frames. drawBehavior is set
+        /// to be at least basicAnimated.
         /// </summary>
-        /// <param name="atlas"></param>
+        /// <param name="sprite">
+        /// The sprite to use (must have a texture defined).
+        /// </param>
+        /// <param name="frameWidth">
+        /// The width of each frame in the texture.
+        /// </param>
+        /// <param name="frameHeight">
+        /// The height of each frame in the texture.
+        /// </param>
+        /// <param name="frames">
+        /// The number of total frames.
+        /// </param>
+        /// <param name="rows">
+        /// The number of rows (vertical frames) in the texture.
+        /// </param>
+        /// <param name="cols">
+        /// The number of columns (side-by-side frames) in the texture.
+        /// </param>
+        /// <param name="frameSpeed">
+        /// Sets the frame update speed (how many update calls required per
+        /// frame switch). Can be negative to cycle backwards.
+        /// </param>
+        public SpriteAtlas(Sprite sprite, int frameWidth, int frameHeight, int frames, int rows, int cols, double frameSpeed)
+        {
+            this.sprite = sprite;
+
+            //basicAnimated or Animated are required to function.
+            if (this.sprite.drawBehavior == SpriteDraw.basic)
+            {
+                this.sprite.drawBehavior = SpriteDraw.basicAnimated;
+            }
+
+            this.frameWidth = frameWidth;
+            this.frameHeight = frameHeight;
+            this.frames = frames;
+            atlasRows = rows;
+            atlasCols = cols;
+            this.frameSpeed = frameSpeed;
+            sprite.rectSrc.Width = frameWidth;
+            sprite.rectSrc.Height = frameHeight;
+            sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
+            sprite.rectDest.Height = frameHeight * this.sprite.scaleY;
+        }
+
+        /// <summary>
+        /// All values are copied except for the sprite, which is referenced.
+        /// </summary>
         public SpriteAtlas(SpriteAtlas atlas)
         {
             sprite = atlas.sprite;
@@ -63,59 +219,9 @@ namespace EnduranceTheMaze
             frameOffsetV = atlas.frameOffsetV;
         }
 
-        /// <summary>Animates through the given sprite's frames. Sets drawBehavior to basicAnimated if it's "basic".</summary>
-        /// <param name="sprite">The sprite to use (must have a texture defined).</param>
-        /// <param name="frameWidth">The width of each frame in the texture.</param>
-        /// <param name="frameHeight">The height of each frame in the texture.</param>
-        /// <param name="frames">The number of total frames.</param>
-        /// <param name="rows">The number of rows (vertical frames) in the texture.</param>
-        /// <param name="cols">The number of columns (side-by-side frames) in the texture.</param>
-        public SpriteAtlas(Sprite sprite, int frameWidth, int frameHeight, int frames, int rows, int cols)
-        {
-            this.sprite = sprite;
-            if (this.sprite.drawBehavior == SpriteDraw.basic)
-            {
-                this.sprite.drawBehavior = SpriteDraw.basicAnimated;
-            }
-            this.frameWidth = frameWidth;
-            this.frameHeight = frameHeight;
-            this.frames = frames;
-            atlasRows = rows;
-            atlasCols = cols;
-            sprite.rectSrc.Width = frameWidth;
-            sprite.rectSrc.Height = frameHeight;
-            sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
-            sprite.rectDest.Height = frameHeight * this.sprite.scaleY;
-        }
-
-        /// <summary>Animates through the given sprite's frames. Sets drawBehavior to basicAnimated if it's "basic".</summary>
-        /// <param name="sprite">The sprite to use (must have a texture defined).</param>
-        /// <param name="frameWidth">The width of each frame in the texture.</param>
-        /// <param name="frameHeight">The height of each frame in the texture.</param>
-        /// <param name="frames">The number of total frames.</param>
-        /// <param name="rows">The number of rows (vertical frames) in the texture.</param>
-        /// <param name="cols">The number of columns (side-by-side frames) in the texture.</param>
-        /// <param name="frameSpeed">Sets the speed at which frames update.</param>
-        public SpriteAtlas(Sprite sprite, int frameWidth, int frameHeight, int frames, int rows, int cols, double frameSpeed)
-        {
-            this.sprite = sprite;
-            if (this.sprite.drawBehavior == SpriteDraw.basic)
-            {
-                this.sprite.drawBehavior = SpriteDraw.basicAnimated;
-            }
-            this.frameWidth = frameWidth;
-            this.frameHeight = frameHeight;
-            this.frames = frames;
-            atlasRows = rows;
-            atlasCols = cols;
-            this.frameSpeed = frameSpeed;
-            sprite.rectSrc.Width = frameWidth;
-            sprite.rectSrc.Height = frameHeight;
-            sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
-            sprite.rectDest.Height = frameHeight * this.sprite.scaleY;
-        }
-
-        /// <summary>Initializes a sprite atlas from another.</summary>
+        /// <summary>
+        /// Initializes a sprite atlas from another.
+        /// </summary>
         /// <param name="spriteAtlas">The existing sprite atlas.</param>
         /// <param name="sameFrame">
         /// Whether the frame is copied or set to 0.
@@ -139,8 +245,8 @@ namespace EnduranceTheMaze
             sprite = spriteAtlas.sprite;
             sprite.rectSrc.Width = frameWidth;
             sprite.rectSrc.Height = frameHeight;
-            sprite.rectDest.Width = frameWidth * this.sprite.scaleX;
-            sprite.rectDest.Height = frameHeight * this.sprite.scaleY;
+            sprite.rectDest.Width = frameWidth * sprite.scaleX;
+            sprite.rectDest.Height = frameHeight * sprite.scaleY;
         }
 
         /// <summary>
@@ -214,10 +320,10 @@ namespace EnduranceTheMaze
                     {
                         switch (frameEndBehavior)
                         {
-                            case (FrameEnd.end):
+                            case (FrameEnd.End):
                                 frameSpeed = 0;
                                 break;
-                            case (FrameEnd.loop):
+                            case (FrameEnd.Loop):
                                 if ((int)frame >= frames)
                                 {
                                     frame = 0;
@@ -227,7 +333,7 @@ namespace EnduranceTheMaze
                                     frame = frames;
                                 }
                                 break;
-                            case (FrameEnd.reverse):
+                            case (FrameEnd.Reverse):
                                 frameSpeed = -frameSpeed;
                                 break;
                         }

@@ -81,12 +81,23 @@ namespace EnduranceTheMaze
         }
 
         /// <summary>
-        /// Returns the proper string representation of visible keys.
+        /// Adds the string representation of the given key to another
+        /// string. Backspace removes a character. Applies the second
+        /// character on a US keyboard if shift is pressed, e.g.
+        /// uppercase and symbols instead of numbers.
         /// </summary>
-        /// <param name="shiftPressed">
-        /// Whether or not shift is active (not capslock).
+        /// <param name="str">
+        /// A string to append the key to.
         /// </param>
-        public static string KeyToString(String str, Keys key,
+        /// <param name="key">
+        /// The key to append to the string.
+        /// </param>
+        /// <param name="shiftPressed">
+        /// Whether or not shift is active. Capslock is detected automatically.
+        /// </param>
+        public static string KeyToString(
+            String str,
+            Keys key,
             bool shiftPressed)
         {
             //Checks for backspace.

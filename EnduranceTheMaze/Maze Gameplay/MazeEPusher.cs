@@ -47,7 +47,7 @@ namespace EnduranceTheMaze
             BlockSprite.depth = 0.415f;
             BlockSprite.drawBehavior = SpriteDraw.all;            
             spriteAtlas = new SpriteAtlas(BlockSprite, 64, 32, 3, 1, 3);
-            BlockSprite.originOffset = true;
+            BlockSprite.doDrawOffset = true;
             BlockSprite.origin.X = 16;
             BlockSprite.origin.Y = 16;
 

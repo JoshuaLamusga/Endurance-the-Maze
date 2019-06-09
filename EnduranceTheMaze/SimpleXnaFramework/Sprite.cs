@@ -4,20 +4,81 @@ using System;
 
 namespace EnduranceTheMaze
 {
+    /// <summary>
+    /// Encapsulates spritebatch parameters in an object for simple reuse.
+    /// </summary>
     public class Sprite
     {
-        public Texture2D texture; //The pre-loaded 2d sprite texture.
-        public SmoothRect rectSrc, rectDest; //Source & dest. rectangles.
-        public Vector2 origin; //Point in texture drawn at coords.
-        public bool originOffset = true; //If the origin translation is drawn.
-        public float angle = 0; //Rotation angle in radians.
-        public float depth = 0; //Determines drawing order; smallest first.
-        public Color color = Color.White; //Color blending.
-        public float alpha = 1; //alpha blending (1 is opaque).
-        public SpriteEffects spriteEffects; //Represents image mirroring.
-        public float scaleX = 1, scaleY = 1; //a width and height multiplier.
-        public SpriteDraw drawBehavior = SpriteDraw.basic; //Image drawing.
-                       
+        #region Members
+        /// <summary>
+        /// The pre-loaded 2d sprite texture.
+        /// </summary>
+        public Texture2D texture;
+
+        /// <summary>
+        /// The rectangle defining which portion of the source texture to use.
+        /// </summary>
+        public SmoothRect rectSrc;
+
+        /// <summary>
+        /// The rectangle defining the coordinates to draw the texture to.
+        /// </summary>
+        public SmoothRect rectDest;
+
+        /// <summary>
+        /// The position in the texture corresponding to (0, 0) for drawing.
+        /// This shifts where the image is drawn and its rotation origin.
+        /// </summary>
+        public Vector2 origin;
+
+        /// <summary>
+        /// Whether to draw the origin translation or not. The rotation origin
+        /// still follows the origin regardless.
+        /// </summary>
+        public bool doDrawOffset = true;
+
+        /// <summary>
+        /// The rotation angle in radians.
+        /// </summary>
+        public float angle = 0;
+
+        /// <summary>
+        /// The drawing order depth, so smallest are drawn first and covered.
+        /// </summary>
+        public float depth = 0;
+
+        /// <summary>
+        /// The color to blend the sprite with. White is zero blending.
+        /// </summary>
+        public Color color = Color.White;
+
+        /// <summary>
+        /// The translucency of the image. 1 is opaque. 0 is transparent.
+        /// </summary>
+        public float alpha = 1;
+
+        /// <summary>
+        /// Image mirroring effects.
+        /// </summary>
+        public SpriteEffects spriteEffects;
+
+        /// <summary>
+        /// Horizontal texture stretching multiplier. 1 is normal.
+        /// </summary>
+        public float scaleX = 1;
+
+        /// <summary>
+        /// Vertical texture stretching multiplier. 1 is normal.
+        /// </summary>
+        public float scaleY = 1;
+
+        /// <summary>
+        /// Affects how extensive the drawing is.
+        /// </summary>
+        public SpriteDraw drawBehavior = SpriteDraw.basic;
+        #endregion
+
+        #region Constructors
         /// <summary>
         /// Initializes an empty sprite. The texture must be set before drawing
         /// to avoid throwing an exception.
@@ -41,7 +102,7 @@ namespace EnduranceTheMaze
             rectDest = new SmoothRect(sprite.rectDest);
             texture = sprite.texture;
             origin = new Vector2(sprite.origin.X, sprite.origin.Y);
-            originOffset = sprite.originOffset;
+            doDrawOffset = sprite.doDrawOffset;
             angle = sprite.angle;
             depth = sprite.depth;
             color = sprite.color;
@@ -158,7 +219,9 @@ namespace EnduranceTheMaze
             this.scaleX = scaleX;
             this.scaleY = scaleY;
         }
+        #endregion
 
+        #region Methods
         /// <summary>Sets the texture and resets scaling effects.</summary>
         /// <param name="doSetDimensions">
         /// Whether or not width and height are set as well.
@@ -217,12 +280,7 @@ namespace EnduranceTheMaze
             tempRect2.X -= spr2.origin.X;
             tempRect2.Y -= spr2.origin.Y;
 
-            if (SmoothRect.IsIntersecting(tempRect1, tempRect2))
-            {
-                return true;
-            }
-
-            return false;
+            return SmoothRect.IsIntersecting(tempRect1, tempRect2);
         }
 
         /// <summary>
@@ -237,18 +295,13 @@ namespace EnduranceTheMaze
             SmoothRect tempRect2 = new SmoothRect(rect2);
 
             //Adjusts the rectangles based on the origin.
-            if (!spr1.originOffset)
+            if (!spr1.doDrawOffset)
             {
                 tempRect1.X -= spr1.origin.X;
                 tempRect1.Y -= spr1.origin.Y;
             }
 
-            if (SmoothRect.IsIntersecting(tempRect1, tempRect2))
-            {
-                return true;
-            }
-
-            return false;
+            return SmoothRect.IsIntersecting(tempRect1, tempRect2);
         }
 
         /// <summary>
@@ -305,14 +358,16 @@ namespace EnduranceTheMaze
             return false;
         }
 
-        /// <summary>Draws the sprite with a SpriteBatch.</summary>
+        /// <summary>
+        /// Draws the sprite with a SpriteBatch.
+        /// </summary>
         public void Draw(SpriteBatch spriteBatch)
         {
             float xPos = rectDest.ToRect().X;
             float yPos = rectDest.ToRect().Y;
 
             //Adjusts to remove origin while drawing if enabled.
-            if (originOffset)
+            if (doDrawOffset)
             {
                 xPos += origin.X;
                 yPos += origin.Y;
@@ -361,5 +416,6 @@ namespace EnduranceTheMaze
                     break;
             }
         }
+        #endregion
     }
 }
