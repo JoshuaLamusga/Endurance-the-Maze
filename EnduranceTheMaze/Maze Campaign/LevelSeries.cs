@@ -1,12 +1,15 @@
-﻿using System.IO;
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.IO;
 
 namespace EnduranceTheMaze
 {
     /// <summary>
     /// Represents a chain of connected levels.
     /// </summary>
-    public class CmpgnSeries
+    public class LevelSeries
     {
+        #region Members
         /// <summary>
         /// Stores the current level number. Begins at 1.
         /// </summary>
@@ -17,19 +20,25 @@ namespace EnduranceTheMaze
         /// </summary>
         public string LevelFileName { get; set; }
 
-        //The current game instance.
+        /// <summary>
+        /// The current game instance.
+        /// </summary>
         private MainLoop game;
+        #endregion
 
+        #region Constructors
         /// <summary>
         /// A series of levels.
         /// </summary>
-        public CmpgnSeries(MainLoop game, string baseFileName)
+        public LevelSeries(MainLoop game, string baseFileName)
         {
             this.game = game;
-            this.LevelNum = 1; //The first level to load.
-            this.LevelFileName = baseFileName;
+            LevelNum = 1; //The first level to load.
+            LevelFileName = baseFileName;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Loads the campaign level with the current number.
         /// </summary>
@@ -53,5 +62,6 @@ namespace EnduranceTheMaze
 
             return (stream != null);
         }
+        #endregion
     }
 }

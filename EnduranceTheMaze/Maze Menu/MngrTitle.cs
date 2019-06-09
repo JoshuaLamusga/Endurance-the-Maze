@@ -326,10 +326,7 @@ namespace EnduranceTheMaze
                             game.LvlSeriesEasy.LevelNum = 1;
                         }
 
-                        game.currentSeries = game.LvlSeriesEasy;
-                        game.GmState = GameState.stateGameplay;
-                        game.SetScreenCaption("Gameplay");
-                        game.currentSeries.LoadCampaign();
+                        game.mngrCampaign.SetSeries(game.LvlSeriesEasy);
                     }
                     else if (bttnCmpgnNormal.isClicked)
                     {
@@ -340,10 +337,7 @@ namespace EnduranceTheMaze
                             game.LvlSeriesNormal.LevelNum = 1;
                         }
 
-                        game.currentSeries = game.LvlSeriesNormal;
-                        game.GmState = GameState.stateGameplay;
-                        game.SetScreenCaption("Gameplay");
-                        game.currentSeries.LoadCampaign();
+                        game.mngrCampaign.SetSeries(game.LvlSeriesNormal);
                     }
                     else if (bttnCmpgnHard.isClicked)
                     {
@@ -354,10 +348,7 @@ namespace EnduranceTheMaze
                             game.LvlSeriesHard.LevelNum = 1;
                         }
 
-                        game.currentSeries = game.LvlSeriesHard;
-                        game.GmState = GameState.stateGameplay;
-                        game.SetScreenCaption("Gameplay");
-                        game.currentSeries.LoadCampaign();
+                        game.mngrCampaign.SetSeries(game.LvlSeriesHard);
                     }
                     else if (bttnCmpgnDoom.isClicked)
                     {
@@ -368,10 +359,7 @@ namespace EnduranceTheMaze
                             game.LvlSeriesDoom.LevelNum = 1;
                         }
 
-                        game.currentSeries = game.LvlSeriesDoom;
-                        game.GmState = GameState.stateGameplay;
-                        game.SetScreenCaption("Gameplay");
-                        game.currentSeries.LoadCampaign();
+                        game.mngrCampaign.SetSeries(game.LvlSeriesDoom);
                     }
                     else if (bttnBack.isClicked)
                     {
