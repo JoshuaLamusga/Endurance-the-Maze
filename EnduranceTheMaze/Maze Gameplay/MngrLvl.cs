@@ -226,6 +226,7 @@ namespace EnduranceTheMaze
             MazeHealth.LoadContent(game.Content);
             MazeIce.LoadContent(game.Content);
             MazeKey.LoadContent(game.Content);
+            MazeLaserActuator.LoadContent(game.Content);
             MazeLock.LoadContent(game.Content);
             MazeMultiWay.LoadContent(game.Content);
             MazePanel.LoadContent(game.Content);
@@ -616,9 +617,9 @@ namespace EnduranceTheMaze
                     Math.Abs((obj.Y * 32 + 16) - ((item.Y + item.CustInt2))) < 7 &&
                     obj.Layer == item.Layer && obj.IsSolid).ToList();
 
-                //Damages all actors it hits.
                 foreach (GameObj item2 in itemsFront)
                 {
+                    //Damages all actors it hits.
                     if (item2.BlockType == Type.Actor)
                     {
                         (item2 as MazeActor).hp -= 25;
@@ -639,7 +640,7 @@ namespace EnduranceTheMaze
 
                     #region Interaction: MazeMirror
                     //The mirrors bend or absorb the bullets.
-                    if (item2.BlockType == Type.Mirror)
+                    else if (item2.BlockType == Type.Mirror)
                     {
                         //Bullet is coming in the opposite direction of the mirror.
                         if (item.BlockDir == Utils.DirOpp(item2.BlockDir))
@@ -668,9 +669,17 @@ namespace EnduranceTheMaze
                             continue;
                         }
                     }
+                    #endregion
+
+                    #region Interaction: MazeLaserActuator
+                    //The laser actuator absorbs the bullets.
+                    else if (item2 is MazeLaserActuator item2AsLaserActuator)
+                    {
+                        item2AsLaserActuator.ReceivedBullet();
+                    }
+                    #endregion
 
                     RemoveItem(item);
-                    #endregion
                 }
             }
             #endregion
@@ -730,6 +739,7 @@ namespace EnduranceTheMaze
                             }
                         }
                     }
+                    MazeLaserActuator.LoadContent(game.Content);
                 }
                 #endregion
                 #region Handles MazeEnemy triggering
