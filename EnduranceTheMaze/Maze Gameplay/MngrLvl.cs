@@ -791,13 +791,16 @@ namespace EnduranceTheMaze
                 //Gets a list of all ice blocks.
                 itemsTemp = items.Where(o => o.BlockType == Type.Ice).ToList();
 
+                List<GameObj> iceItemsTop = items.Where(
+                    o => o.BlockType == Type.Actor || o.BlockType == Type.Enemy ||
+                    o.BlockType == Type.Crate || o.BlockType == Type.Belt)
+                    .ToList();
+
                 foreach (GameObj ice in itemsTemp)
                 {
                     //Gets a list of actors/enemies/crates/belts in location.
-                    itemsTop = items.Where(o => o.X == ice.X &&
-                        o.Y == ice.Y && o.Layer == ice.Layer &&
-                        (o.BlockType == Type.Actor || o.BlockType == Type.Enemy ||
-                        o.BlockType == Type.Crate || o.BlockType == Type.Belt))
+                    itemsTop = iceItemsTop.Where(o => o.X == ice.X &&
+                        o.Y == ice.Y && o.Layer == ice.Layer)
                         .ToList();
 
                     //if there are no belts on the ice.
