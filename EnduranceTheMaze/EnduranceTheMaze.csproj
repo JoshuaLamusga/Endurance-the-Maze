@@ -57,6 +57,7 @@
     <Compile Include="Maze Gameplay\MazeClick.cs" />
     <Compile Include="Maze Gameplay\MazeCoin.cs" />
     <Compile Include="Maze Gameplay\MazeCoinLock.cs" />
+    <Compile Include="Maze Gameplay\MazeLaserActuator.cs" />
     <Compile Include="Maze Gameplay\MazeCrate.cs" />
     <Compile Include="Maze Gameplay\MazeCrateBroken.cs" />
     <Compile Include="Maze Gameplay\MazeCrateHole.cs" />

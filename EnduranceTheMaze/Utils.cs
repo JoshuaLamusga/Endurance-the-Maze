@@ -259,6 +259,8 @@ namespace EnduranceTheMaze
                     return new MazeIce(game, x, y, layer);
                 case Type.Key:
                     return new MazeKey(game, x, y, layer);
+                case Type.LaserActuator:
+                    return new MazeLaserActuator(game, x, y, layer);
                 case Type.Lock:
                     return new MazeLock(game, x, y, layer);
                 case Type.Message:

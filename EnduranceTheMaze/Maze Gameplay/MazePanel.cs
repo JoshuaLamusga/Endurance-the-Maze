@@ -100,14 +100,7 @@ namespace EnduranceTheMaze
             if (IsEnabled)
             {
                 //Sets whether the panel is pressed down or not.
-                if (items.Count > 0)
-                {
-                    isHeld = true;
-                }
-                else
-                {
-                    isHeld = false;
-                }
+                isHeld = items.Count > 0;
 
                 //If activated or held down.
                 if (IsActivated || isHeld)

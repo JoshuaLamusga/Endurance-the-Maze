@@ -240,6 +240,7 @@ namespace EnduranceTheMaze
             itemTypes.Add(new ImgType(game, Type.Health));
             itemTypes.Add(new ImgType(game, Type.Ice));
             itemTypes.Add(new ImgType(game, Type.Key));
+            itemTypes.Add(new ImgType(game, Type.LaserActuator));
             itemTypes.Add(new ImgType(game, Type.Lock));
             itemTypes.Add(new ImgType(game, Type.Message));
             itemTypes.Add(new ImgType(game, Type.Mirror));
@@ -1013,7 +1014,8 @@ namespace EnduranceTheMaze
                 }
                 if (activeItem.BlockType != Type.EAuto &&
                     activeItem.BlockType != Type.Panel &&
-                    activeItem.BlockType != Type.Click)
+                    activeItem.BlockType != Type.Click &&
+                    activeItem.BlockType != Type.LaserActuator)
                 {
                     bttnActionIndex2.IsVisible = false;
                 }
@@ -1047,6 +1049,13 @@ namespace EnduranceTheMaze
                     if (activeItem.ActionType > 7)
                     {
                         activeItem.ActionType = 7;
+                    }
+                }
+                else if (activeItem.BlockType == Type.LaserActuator)
+                {
+                    if (activeItem.ActionType > 8)
+                    {
+                        activeItem.ActionType = 8;
                     }
                 }
                 else if (activeItem.BlockType == Type.Spawner ||
@@ -1091,6 +1100,14 @@ namespace EnduranceTheMaze
                     if (activeItem.CustInt1 < 0)
                     {
                         activeItem.CustInt1 = 0;
+                    }
+                }
+                else if (activeItem.BlockType == Type.LaserActuator)
+                {
+                    //Requires a positive amount of bullets to activate.
+                    if (activeItem.CustInt1 < 1)
+                    {
+                        activeItem.CustInt1 = 1;
                     }
                 }
                 else if (activeItem.BlockType == Type.CoinLock)
@@ -1182,7 +1199,8 @@ namespace EnduranceTheMaze
                     activeItem.BlockType == Type.CoinLock ||
                     activeItem.BlockType == Type.Filter ||
                     activeItem.BlockType == Type.EAuto ||
-                    activeItem.BlockType == Type.Gate)
+                    activeItem.BlockType == Type.Gate ||
+                    activeItem.BlockType == Type.LaserActuator)
                 {
                     if (activeItem.CustInt2 > 1)
                     {
@@ -1651,6 +1669,24 @@ namespace EnduranceTheMaze
                                     tooltip += "breaks open.";
                                 }
                                 break;
+                            case Type.LaserActuator:
+                                if (activeItem.ActionType == 5)
+                                {
+                                    tooltip += $"activates linked items every {activeItem.CustInt1} bullets.";
+                                }
+                                else if (activeItem.ActionType == 6)
+                                {
+                                    tooltip += $"activates/deactivates linked items every {activeItem.CustInt1} bullets";
+                                }
+                                else if (activeItem.ActionType == 7)
+                                {
+                                    tooltip += $"Activates linked items after {activeItem.CustInt1} bullets, then deactivates after {activeItem.CustInt2} frames without a bullet";
+                                }
+                                else if (activeItem.ActionType == 8)
+                                {
+                                    tooltip += $"Activates after {activeItem.CustInt1} bullets and doesn't deactivate.";
+                                }
+                                break;
                             case Type.EAuto:
                                 if (activeItem.ActionType == 5)
                                 {
@@ -1826,6 +1862,9 @@ namespace EnduranceTheMaze
                             }
                             break;
                         case Type.Key:
+                        case Type.LaserActuator:
+                            tooltip = $"Absorbs {activeItem.CustInt1} bullets before triggering.";
+                            break;
                         case Type.Lock:
                             if (activeItem.CustInt1 == 0)
                             {
@@ -1971,6 +2010,9 @@ namespace EnduranceTheMaze
                             {
                                 tooltip = "Is solid.";
                             }
+                            break;
+                        case Type.LaserActuator:
+                            tooltip = $"Turn off after {activeItem.CustInt2} frames.";
                             break;
                         case Type.Teleporter:
                             tooltip = "Teleport channel: " +

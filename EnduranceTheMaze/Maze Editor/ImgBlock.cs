@@ -113,8 +113,6 @@ namespace EnduranceTheMaze
             {
                 BlockSprite.angle += 0.02f;
             }
-
-
         }
 
         /// <summary>
@@ -436,6 +434,17 @@ namespace EnduranceTheMaze
                         case (9):
                             BlockSprite.color = Color.DarkOrange;
                             break;
+                    }
+                    #endregion
+                    break;
+                case Type.LaserActuator:
+                    BlockSprite = new Sprite(true, MazeLaserActuator.TexLaserActuator);
+                    BlockSprite.depth = 0.421f;
+                    BlockSpriteAtlas = new SpriteAtlas(BlockSprite, 32, 32, 5, 1, 5);
+                    #region Adjusts sprite.
+                    if (IsEnabled)
+                    {
+                        BlockSpriteAtlas.frame = 1;
                     }
                     #endregion
                     break;
